@@ -1,4 +1,4 @@
-# Next.js / TypeScript / Apollo / TailwindCSS Starter
+# Songstagram Web Application
 
 A front-end boilerplate using [Next.js][next], [TailwindCSS][tailwind], & [Apollo Client][apollo]
 

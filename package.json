@@ -1,8 +1,8 @@
 {
-  "name": "next-typescript-apollo-starter",
-  "version": "1.0.0",
-  "description": "A Next.js starter template with TailwindCSS, Apollo, & TypeScript",
-  "repository": "https://github.com/Dylan-Oleary/next-apollo-tailwind-typescript.git",
+  "name": "songstagram-web-app",
+  "version": "0.0.0",
+  "description": "Songstagram web application",
+  "repository": "https://github.com/Dylan-Oleary/songstagram-web-app.git",
   "author": "Dylan O'Leary <dylanolearydev@gmail.com>",
   "private": true,
   "license": "MIT",
