@@ -22,3 +22,9 @@ declare type ServerError = {
     message: string | null;
     details: string[];
 }
+declare interface IBaseUser {
+    userNo: number;
+    email: string;
+    username: string;
+    profilePicture?: string;
+}

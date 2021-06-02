@@ -1,4 +1,4 @@
-import { getSiteLayout } from "layouts";
+import { getApplicationLayout } from "layouts";
 
 const NotFoundPage: ExtendedNextPage = ({}) => {
     return (
@@ -8,6 +8,6 @@ const NotFoundPage: ExtendedNextPage = ({}) => {
     );
 };
 
-NotFoundPage.getLayout = getSiteLayout;
+NotFoundPage.getLayout = getApplicationLayout;
 
 export default NotFoundPage;

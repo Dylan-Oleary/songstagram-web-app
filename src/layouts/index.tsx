@@ -1,1 +1,2 @@
-export * from "./SiteLayout";
+export * from "./ApplicationLayout";
+export * from "./AuthenticatedLayout";

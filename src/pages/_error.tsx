@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { getSiteLayout } from "layouts";
+import { getApplicationLayout } from "layouts";
 
 interface IErrorPageProps {
     /**
@@ -31,6 +31,6 @@ ErrorPage.getInitialProps = ({ res, err }) => {
     return { statusCode };
 };
 
-ErrorPage.getLayout = getSiteLayout;
+ErrorPage.getLayout = getApplicationLayout;
 
 export default ErrorPage;

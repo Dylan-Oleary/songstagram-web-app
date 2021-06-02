@@ -3,7 +3,8 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import Cookies from "cookies";
 
 import "styles/globals.css";
-import { SiteLayout } from "layouts";
+import { UserProvider } from "context";
+import { ApplicationLayout } from "layouts";
 import { songstagramApi } from "lib";
 import Error from "pages/_error";
 
@@ -22,14 +23,18 @@ function Application({ Component, pageProps, serverProps }: ExtendedAppProps) {
 
     const getLayout: GetLayout =
         (Component as ExtendedNextComponent).getLayout ||
-        ((page) => <SiteLayout>{page}</SiteLayout>);
+        ((page) => <ApplicationLayout>{page}</ApplicationLayout>);
 
     if (serverProps?.errorStatus) {
         return <Error statusCode={serverProps.errorStatus} />;
     }
 
     return (
-        <ApolloProvider client={client}>{getLayout(<Component {...pageProps} />)}</ApolloProvider>
+        <ApolloProvider client={client}>
+            <UserProvider initialValues={{ accessToken: serverProps?.accessToken }}>
+                {getLayout(<Component {...pageProps} />)}
+            </UserProvider>
+        </ApolloProvider>
     );
 }
 
@@ -46,49 +51,51 @@ Application.getInitialProps = async (context: AppContext) => {
         details: []
     };
 
-    if (req?.cookies?.session && req?.cookies?.["session.sig"]) {
-        await songstagramApi<{ accessToken: string }>("/token", "GET", null, {
-            cookie: `session=${req.cookies.session}; session.sig=${req.cookies["session.sig"]};`
-        })
-            .then(({ accessToken }) => {
-                serverProps = {
-                    ...serverProps,
-                    isAuthenticated: true,
-                    accessToken
-                };
+    if (req && res) {
+        if (req?.cookies?.session && req?.cookies?.["session.sig"]) {
+            await songstagramApi<{ accessToken: string }>("/token", "GET", null, {
+                cookie: `session=${req.cookies.session}; session.sig=${req.cookies["session.sig"]};`
             })
-            .catch(({ response }) => {
-                error = {
-                    status: response?.data?.status || 500,
-                    message: response?.data?.message || "Server Error",
-                    details: response?.data?.details || []
-                };
+                .then(({ accessToken }) => {
+                    serverProps = {
+                        ...serverProps,
+                        isAuthenticated: true,
+                        accessToken
+                    };
+                })
+                .catch(({ response }) => {
+                    error = {
+                        status: response?.data?.status || 500,
+                        message: response?.data?.message || "Server Error",
+                        details: response?.data?.details || []
+                    };
 
-                if (new RegExp(/40[13]/g).test(error.status.toString())) {
-                    const cookies = new Cookies(req, res);
-                    const expiredDate = new Date(1992, 1, 9);
+                    if (new RegExp(/40[13]/g).test(error.status.toString())) {
+                        const cookies = new Cookies(req, res);
+                        const expiredDate = new Date(1992, 1, 9);
 
-                    cookies.set("session", null, { expires: expiredDate });
-                    cookies.set("session.sig", null, { expires: expiredDate });
-                }
-            });
-    }
+                        cookies.set("session", null, { expires: expiredDate });
+                        cookies.set("session.sig", null, { expires: expiredDate });
+                    }
+                });
+        }
 
-    if (error.status && new RegExp(/5\d{2}/g).test(error.status.toString())) {
-        serverProps = {
-            ...serverProps,
-            errorStatus: error.status
-        };
-    } else if (!serverProps.isAuthenticated && pathname !== "/login") {
-        res.writeHead(302, { Location: "/login" });
-        res.end();
+        if (error.status && new RegExp(/5\d{2}/g).test(error.status.toString())) {
+            serverProps = {
+                ...serverProps,
+                errorStatus: error.status
+            };
+        } else if (!serverProps.isAuthenticated && pathname !== "/login") {
+            res.writeHead(302, { Location: "/login" });
+            res.end();
 
-        return {};
-    } else if (serverProps.isAuthenticated && pathname === "/login") {
-        res.writeHead(302, { Location: "/" });
-        res.end();
+            return {};
+        } else if (serverProps.isAuthenticated && pathname === "/login") {
+            res.writeHead(302, { Location: "/" });
+            res.end();
 
-        return {};
+            return {};
+        }
     }
 
     return {
