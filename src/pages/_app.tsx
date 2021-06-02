@@ -5,34 +5,38 @@ import Cookies from "cookies";
 import "styles/globals.css";
 import { UserProvider } from "context";
 import { ApplicationLayout } from "layouts";
-import { songstagramApi } from "lib";
+import { gqlErrorHandler, songstagramApi } from "lib";
 import Error from "pages/_error";
 
 type ServerProps = {
     accessToken?: string;
     errorStatus?: number;
     isAuthenticated: boolean;
+    user?: IBaseUser;
 };
 
 type ExtendedAppProps = AppProps & { serverProps: ServerProps };
 
 function Application({ Component, pageProps, serverProps }: ExtendedAppProps) {
     const client = new ApolloClient({
-        cache: new InMemoryCache()
+        cache: new InMemoryCache(),
+        uri: String(process.env.SONGSTAGRAM_BACKEND_GRAPHQL_URL)
     });
 
     const getLayout: GetLayout =
         (Component as ExtendedNextComponent).getLayout ||
         ((page) => <ApplicationLayout>{page}</ApplicationLayout>);
 
-    if (serverProps?.errorStatus) {
-        return <Error statusCode={serverProps.errorStatus} />;
-    }
-
     return (
         <ApolloProvider client={client}>
-            <UserProvider initialValues={{ accessToken: serverProps?.accessToken }}>
-                {getLayout(<Component {...pageProps} />)}
+            <UserProvider
+                initialValues={{ accessToken: serverProps?.accessToken, user: serverProps?.user }}
+            >
+                {serverProps?.errorStatus ? (
+                    <Error statusCode={serverProps.errorStatus} />
+                ) : (
+                    getLayout(<Component {...pageProps} />)
+                )}
             </UserProvider>
         </ApolloProvider>
     );
@@ -51,24 +55,50 @@ Application.getInitialProps = async (context: AppContext) => {
         details: []
     };
 
+    /**
+     * Server side request handling
+     */
     if (req && res) {
         if (req?.cookies?.session && req?.cookies?.["session.sig"]) {
             await songstagramApi<{ accessToken: string }>("/token", "GET", null, {
                 cookie: `session=${req.cookies.session}; session.sig=${req.cookies["session.sig"]};`
             })
-                .then(({ accessToken }) => {
-                    serverProps = {
-                        ...serverProps,
-                        isAuthenticated: true,
-                        accessToken
-                    };
-                })
+                .then(({ accessToken }) =>
+                    songstagramApi<{ data: { me: IBaseUser } }>(
+                        "/graphql",
+                        "POST",
+                        {
+                            query: `
+                            query GetMe {
+                                me {
+                                    userNo
+                                    email
+                                    username
+                                    profilePicture
+                                }
+                            }
+                        `
+                        },
+                        { authorization: accessToken }
+                    )
+                        .then(({ data }) => {
+                            serverProps = {
+                                ...serverProps,
+                                isAuthenticated: true,
+                                accessToken,
+                                user: data?.me
+                            };
+
+                            return;
+                        })
+                        .catch((error) => gqlErrorHandler(error))
+                )
                 .catch(({ response }) => {
                     error = {
                         status: response?.data?.status || 500,
                         message: response?.data?.message || "Server Error",
                         details: response?.data?.details || []
-                    };
+                    } as ServerError;
 
                     if (new RegExp(/40[13]/g).test(error.status.toString())) {
                         const cookies = new Cookies(req, res);

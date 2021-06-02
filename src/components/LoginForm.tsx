@@ -1,10 +1,12 @@
 import { FC, useState } from "react";
 import { useRouter } from "next/router";
 
+import { useUser } from "context";
 import { songstagramApi } from "lib";
 
 const LoginForm: FC<{}> = ({}) => {
     const router = useRouter();
+    const { setAccessToken, setUser } = useUser();
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 
@@ -15,7 +17,15 @@ const LoginForm: FC<{}> = ({}) => {
         }
 
         songstagramApi("/login", "POST", { email, password })
-            .then(() => {
+            .then(({ accessToken, user }) => {
+                setAccessToken(accessToken);
+                setUser({
+                    userNo: user.userNo,
+                    email: user.email,
+                    username: user.username,
+                    profilePicture: user.profilePcture
+                });
+
                 router.replace("/");
             })
             .catch((error) => {

@@ -28,3 +28,10 @@ declare interface IBaseUser {
     username: string;
     profilePicture?: string;
 }
+declare interface IGraphQlError {
+    extensions?: {
+        statusCode: number;
+        message: string;
+        details: string[];
+    };
+}
