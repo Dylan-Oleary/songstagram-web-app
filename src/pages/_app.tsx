@@ -20,7 +20,7 @@ type ExtendedAppProps = AppProps & { serverProps: ServerProps };
 function Application({ Component, pageProps, serverProps }: ExtendedAppProps) {
     const client = new ApolloClient({
         cache: new InMemoryCache(),
-        uri: String(process.env.SONGSTAGRAM_BACKEND_GRAPHQL_URL)
+        uri: String(process.env.NEXT_PUBLIC_SONGSTAGRAM_BACKEND_GRAPHQL_URL)
     });
 
     const getLayout: GetLayout =

@@ -1,7 +1,7 @@
 import axios, { CancelTokenSource } from "axios";
 
 const songstagramApiConnection = axios.create({
-    baseURL: process.env.SONGSTAGRAM_BACKEND_URL,
+    baseURL: process.env.NEXT_PUBLIC_SONGSTAGRAM_BACKEND_URL,
     withCredentials: true
 });
 

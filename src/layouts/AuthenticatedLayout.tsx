@@ -25,7 +25,7 @@ const AuthenticatedLayout: FC<{}> = ({ children }) => {
 
                     hydrateAccessTokenTimer = setTimeout(() => {
                         hydrateAccessToken();
-                    }, 10000);
+                    }, Number(process.env.NEXT_PUBLIC_ACCESS_TOKEN_REFRESH_TIME));
                 })
                 .catch((error) => {
                     console.error(error);
