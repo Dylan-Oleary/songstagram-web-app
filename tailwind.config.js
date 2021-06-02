@@ -6,10 +6,11 @@ module.exports = {
         "./src/layouts/**/*.{js,ts,jsx,tsx}",
         "./src/pages/**/*.{js,ts,jsx,tsx}"
     ],
-    darkMode: false,
+    darkMode: "class",
     theme: {
         extend: {
             colors: {
+                dark: "#121212",
                 "gray-1": "#000000",
                 "gray-2": "#262626",
                 "gray-3": "#4d4d4d",

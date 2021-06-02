@@ -34,9 +34,11 @@ const LoginForm: FC<{}> = ({}) => {
     };
 
     return (
-        <form action="" method="POST" onSubmit={handleSubmit}>
+        <form action="" method="POST" onSubmit={handleSubmit} className="dark:text-gray-2">
             <div className="flex flex-col">
-                <label htmlFor="email">Email</label>
+                <label className="dark:text-white" htmlFor="email">
+                    Email
+                </label>
                 <input
                     type="text"
                     onChange={({ target }) => setEmail(target?.value)}
@@ -44,7 +46,9 @@ const LoginForm: FC<{}> = ({}) => {
                 />
             </div>
             <div className="flex flex-col">
-                <label htmlFor="email">Password</label>
+                <label className="dark:text-white" htmlFor="email">
+                    Password
+                </label>
                 <input
                     type="text"
                     onChange={({ target }) => setPassword(target?.value)}

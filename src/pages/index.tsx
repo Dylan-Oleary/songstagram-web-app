@@ -7,7 +7,7 @@ import { songstagramApi } from "lib";
 
 const IndexPage: ExtendedNextPage = ({}) => {
     const router = useRouter();
-    const { setAccessToken, setUser } = useUser();
+    const { setAccessToken, setUser, user } = useUser();
 
     const logout = async () => {
         await songstagramApi("/logout", "POST").catch((error) => {
@@ -27,6 +27,16 @@ const IndexPage: ExtendedNextPage = ({}) => {
             <h1 className="text-2xl font-extrabold text-center">
                 Next.js / TypeScript / TailwindCSS / Apollo Starter
             </h1>
+            <button
+                onClick={() =>
+                    setUser({
+                        ...user,
+                        darkMode: !user.darkMode
+                    })
+                }
+            >
+                Change Theme
+            </button>
             <button className="p-2 bg-blue-400" onClick={logout}>
                 Logout
             </button>

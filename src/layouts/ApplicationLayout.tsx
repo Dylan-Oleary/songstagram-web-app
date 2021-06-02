@@ -1,8 +1,17 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
+
+import { useUser } from "context";
+import { updateApplicationTheme } from "lib";
 
 const ApplicationLayout: FC<{}> = ({ children }) => {
+    const { user } = useUser();
+
+    useEffect(() => {
+        updateApplicationTheme(user);
+    }, [user]);
+
     return (
-        <div className="flex w-full h-screen antialiased text-gray-700 bg-gradient-to-r from-yellow-200 to-yellow-300">
+        <div className="flex w-full h-screen antialiased bg-white text-gray-7 dark:bg-dark dark:text-white">
             <main className="flex-grow max-w-4xl px-8 mx-auto">{children}</main>
         </div>
     );
