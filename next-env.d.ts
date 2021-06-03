@@ -27,7 +27,9 @@ declare interface IBaseUser {
     email: string;
     username: string;
     profilePicture?: string;
-    darkMode?: boolean;
+    preferences?: {
+        prefersDarkMode?: boolean;
+    }
 }
 declare interface IGraphQlError {
     extensions?: {

@@ -6,7 +6,7 @@
 const updateApplicationTheme: (user: IBaseUser) => void = (user) => {
     if (typeof window !== undefined) {
         if (user) {
-            if (user.darkMode) {
+            if (user.preferences?.prefersDarkMode) {
                 document.documentElement.classList.add("dark");
                 if (localStorage) localStorage.setItem("theme", "dark");
             } else {

@@ -75,6 +75,9 @@ Application.getInitialProps = async (context: AppContext) => {
                                     email
                                     username
                                     profilePicture
+                                    preferences {
+                                        prefersDarkMode
+                                    }
                                 }
                             }
                         `

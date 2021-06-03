@@ -31,7 +31,10 @@ const IndexPage: ExtendedNextPage = ({}) => {
                 onClick={() =>
                     setUser({
                         ...user,
-                        darkMode: !user.darkMode
+                        preferences: {
+                            ...user.preferences,
+                            prefersDarkMode: !user.preferences.prefersDarkMode
+                        }
                     })
                 }
             >
