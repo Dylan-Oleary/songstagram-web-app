@@ -1,7 +1,7 @@
 # Changelog
 
 ## 0.2.0
-- Add base tailwinf configuration
+- Add base tailwind configuration
 - Add dark mode support
 
 ## 0.1.0
