@@ -16,14 +16,18 @@ const LoginForm: FC<{}> = ({}) => {
             event.stopPropagation();
         }
 
-        songstagramApi("/login", "POST", { email, password })
+        songstagramApi<{ accessToken: string; user: IBaseUser }>("/login", "POST", {
+            email,
+            password
+        })
             .then(({ accessToken, user }) => {
                 setAccessToken(accessToken);
                 setUser({
                     userNo: user.userNo,
                     email: user.email,
                     username: user.username,
-                    profilePicture: user.profilePcture
+                    profilePicture: user.profilePicture,
+                    preferences: user.preferences
                 });
 
                 router.replace("/");
@@ -34,22 +38,20 @@ const LoginForm: FC<{}> = ({}) => {
     };
 
     return (
-        <form action="" method="POST" onSubmit={handleSubmit} className="dark:text-gray-2">
+        <form action="" method="POST" onSubmit={handleSubmit} className="w-full">
             <div className="flex flex-col">
-                <label className="dark:text-white" htmlFor="email">
-                    Email
-                </label>
+                <label htmlFor="email">Email</label>
                 <input
+                    className="border border-black"
                     type="text"
                     onChange={({ target }) => setEmail(target?.value)}
                     value={email}
                 />
             </div>
             <div className="flex flex-col">
-                <label className="dark:text-white" htmlFor="email">
-                    Password
-                </label>
+                <label htmlFor="email">Password</label>
                 <input
+                    className="border border-black"
                     type="text"
                     onChange={({ target }) => setPassword(target?.value)}
                     value={password}

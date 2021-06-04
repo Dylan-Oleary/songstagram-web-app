@@ -5,27 +5,11 @@
  */
 const updateApplicationTheme: (user: IBaseUser) => void = (user) => {
     if (typeof window !== undefined) {
-        if (user) {
-            if (user.preferences?.prefersDarkMode) {
-                document.documentElement.classList.add("dark");
-                if (localStorage) localStorage.setItem("theme", "dark");
-            } else {
-                document.documentElement.classList.remove("dark");
-                if (localStorage) localStorage.removeItem("theme");
-            }
-        } else {
-            if (
-                localStorage?.theme === "dark" ||
-                (!("theme" in localStorage) &&
-                    window.matchMedia("(prefers-color-scheme: dark)").matches)
-            ) {
-                document.documentElement.classList.add("dark");
-                if (localStorage) localStorage.setItem("theme", "dark");
-            } else {
-                document.documentElement.classList.remove("dark");
-                if (localStorage) localStorage.removeItem("theme");
-            }
+        if (user && user.preferences?.prefersDarkMode) {
+            return document.documentElement.classList.add("dark");
         }
+
+        return document.documentElement.classList.remove("dark");
     }
 };
 

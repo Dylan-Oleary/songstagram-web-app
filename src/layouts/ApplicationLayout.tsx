@@ -11,7 +11,7 @@ const ApplicationLayout: FC<{}> = ({ children }) => {
     }, [user]);
 
     return (
-        <div className="flex w-full h-screen antialiased bg-white text-gray-7 dark:bg-dark dark:text-white">
+        <div className="flex w-full h-screen antialiased dark:bg-dark dark:text-white">
             <main className="flex-grow max-w-4xl px-8 mx-auto">{children}</main>
         </div>
     );

@@ -9,7 +9,7 @@ import { songstagramApi } from "lib";
 const IndexPage: ExtendedNextPage = ({}) => {
     const router = useRouter();
     const { accessToken, setAccessToken, setUser, user } = useUser();
-    const [updateUserPreferences, { data }] = useMutation(UPDATE_USER_PREFERENCES, {
+    const [updateUserPreferences] = useMutation(UPDATE_USER_PREFERENCES, {
         context: { headers: { authorization: accessToken } }
     });
 
