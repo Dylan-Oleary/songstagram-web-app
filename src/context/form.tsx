@@ -4,18 +4,50 @@ export interface IFormData {
     [key: string]: Primitive;
 }
 
-export interface IFormInitializeContext {
+export type FormInputValidators = {
+    [key: string]: Array<(value: Primitive) => Error | void>;
+};
+
+export type FormErrors<ExpectedFormData> = {
+    [Property in keyof ExpectedFormData]: Array<string>;
+};
+
+export interface IFormProviderProps {
+    /**
+     * The location of the form submission
+     */
+    action?: string;
+    /**
+     * The form submission method
+     */
+    method?: "POST" | "PUT";
     /**
      * The initial form values
      */
     initialFormValues: IFormData;
+    /**
+     * An object that stores each field's validation logic
+     */
+    inputValidators: FormInputValidators;
 }
 
-export interface IFormContext<ExpectedFormData = IFormData> {
+export interface IFormContext<ExpectedFormData> {
+    /**
+     * The location of the form submission
+     */
+    action: string;
+    /**
+     * The form errors
+     */
+    formErrors: FormErrors<ExpectedFormData>;
     /**
      * The form values
      */
     formValues: ExpectedFormData;
+    /**
+     * The form submission method
+     */
+    method: "POST" | "PUT";
     /**
      * Function to execute on change of an input
      */
@@ -24,8 +56,15 @@ export interface IFormContext<ExpectedFormData = IFormData> {
 
 const FormContext = createContext(undefined);
 
-const FormProvider: FC<IFormInitializeContext> = ({ children, initialFormValues = {} }) => {
+const FormProvider: FC<IFormProviderProps> = ({
+    action = "",
+    children,
+    initialFormValues = {},
+    inputValidators = {},
+    method = "POST"
+}) => {
     const [formValues, setFormValues] = useState<IFormData>(initialFormValues);
+    const [formErrors, setFormErrors] = useState<FormErrors<IFormData>>({});
 
     /**
      * Handles a form input change
@@ -38,12 +77,42 @@ const FormProvider: FC<IFormInitializeContext> = ({ children, initialFormValues 
             ...formValues,
             [field]: value
         });
+
+        if (inputValidators[field]) validateInput(field, value);
+    };
+
+    /**
+     * Runs a form field's validation and sets errors if applicable
+     *
+     * @param field The form field to update
+     * @param value The updated form value
+     */
+    const validateInput: (field: string, value: Primitive) => void = (field, value = null) => {
+        const updatedFormErrors = { ...formErrors };
+        const inputErrors: string[] = [];
+
+        for (const validation of inputValidators[field]) {
+            const error = validation(value) as Error;
+
+            if (error?.message) inputErrors.push(error.message);
+        }
+
+        if (inputErrors.length > 0) {
+            updatedFormErrors[field] = inputErrors;
+        } else if (updatedFormErrors[field]) {
+            delete updatedFormErrors[field];
+        }
+
+        setFormErrors(updatedFormErrors);
     };
 
     return (
         <FormContext.Provider
             value={{
+                action,
+                formErrors,
                 formValues,
+                method,
                 onChange
             }}
         >

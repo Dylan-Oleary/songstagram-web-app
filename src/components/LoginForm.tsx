@@ -1,7 +1,7 @@
-import { FC } from "react";
+import { FC, FormEvent } from "react";
 import { useRouter } from "next/router";
 
-import { FormProvider, IFormData, useForm, useUser } from "context";
+import { FormInputValidators, FormProvider, IFormData, useForm, useUser } from "context";
 import { songstagramApi } from "lib";
 
 interface ILoginFormData extends IFormData {
@@ -12,13 +12,20 @@ interface ILoginFormData extends IFormData {
 const Form: FC<{}> = ({}) => {
     const router = useRouter();
     const { setAccessToken, setUser } = useUser();
-    const { formValues, onChange } = useForm<ILoginFormData>();
+    const { action, formErrors, formValues, method, onChange } = useForm<ILoginFormData>();
 
-    const handleSubmit = (event) => {
+    /**
+     * Function to execute on submission of the form
+     *
+     * @param event The form submission event
+     */
+    const onSubmit: (event: FormEvent) => void = (event) => {
         if (event) {
             event.preventDefault();
             event.stopPropagation();
         }
+
+        if (Object.keys(formErrors || {}).length > 0) return;
 
         songstagramApi<{ accessToken: string; user: IBaseUser }>("/login", "POST", {
             email: formValues.email,
@@ -42,7 +49,7 @@ const Form: FC<{}> = ({}) => {
     };
 
     return (
-        <form action="" method="POST" onSubmit={handleSubmit} className="w-full">
+        <form action={action} className="w-full" method={method} onSubmit={onSubmit}>
             <div className="flex flex-col">
                 <label htmlFor="email">Email</label>
                 <input
@@ -61,11 +68,7 @@ const Form: FC<{}> = ({}) => {
                     value={formValues.password}
                 />
             </div>
-            <button
-                className="p-2 mt-2 text-white bg-blue-500"
-                onClick={handleSubmit}
-                type="submit"
-            >
+            <button className="p-2 mt-2 text-white bg-blue-500" onClick={onSubmit} type="submit">
                 Login
             </button>
         </form>
@@ -77,9 +80,18 @@ const LoginForm: FC<{}> = ({}) => {
         email: "",
         password: ""
     };
+    const inputValidators: FormInputValidators = {
+        email: [
+            (value: string) => {
+                if (value.length > 10) return new Error("YO");
+
+                return;
+            }
+        ]
+    };
 
     return (
-        <FormProvider initialFormValues={initialFormValues}>
+        <FormProvider initialFormValues={initialFormValues} inputValidators={inputValidators}>
             <Form />
         </FormProvider>
     );
