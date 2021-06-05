@@ -1,14 +1,18 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import { useRouter } from "next/router";
 
-import { useUser } from "context";
+import { FormProvider, IFormData, useForm, useUser } from "context";
 import { songstagramApi } from "lib";
 
-const LoginForm: FC<{}> = ({}) => {
+interface ILoginFormData extends IFormData {
+    email: string;
+    password: string;
+}
+
+const Form: FC<{}> = ({}) => {
     const router = useRouter();
     const { setAccessToken, setUser } = useUser();
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
+    const { formValues, onChange } = useForm<ILoginFormData>();
 
     const handleSubmit = (event) => {
         if (event) {
@@ -17,8 +21,8 @@ const LoginForm: FC<{}> = ({}) => {
         }
 
         songstagramApi<{ accessToken: string; user: IBaseUser }>("/login", "POST", {
-            email,
-            password
+            email: formValues.email,
+            password: formValues.password
         })
             .then(({ accessToken, user }) => {
                 setAccessToken(accessToken);
@@ -44,8 +48,8 @@ const LoginForm: FC<{}> = ({}) => {
                 <input
                     className="border border-black"
                     type="text"
-                    onChange={({ target }) => setEmail(target?.value)}
-                    value={email}
+                    onChange={({ target }) => onChange("email", target?.value)}
+                    value={formValues.email}
                 />
             </div>
             <div className="flex flex-col">
@@ -53,8 +57,8 @@ const LoginForm: FC<{}> = ({}) => {
                 <input
                     className="border border-black"
                     type="text"
-                    onChange={({ target }) => setPassword(target?.value)}
-                    value={password}
+                    onChange={({ target }) => onChange("password", target?.value)}
+                    value={formValues.password}
                 />
             </div>
             <button
@@ -65,6 +69,19 @@ const LoginForm: FC<{}> = ({}) => {
                 Login
             </button>
         </form>
+    );
+};
+
+const LoginForm: FC<{}> = ({}) => {
+    const initialFormValues: ILoginFormData = {
+        email: "",
+        password: ""
+    };
+
+    return (
+        <FormProvider initialFormValues={initialFormValues}>
+            <Form />
+        </FormProvider>
     );
 };
 
