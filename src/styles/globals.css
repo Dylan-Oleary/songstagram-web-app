@@ -18,3 +18,14 @@ a {
 * {
     box-sizing: border-box;
 }
+
+input:focus ~ .floating-label,
+input:not(:placeholder-shown) ~ .floating-label,
+textarea:focus ~ .floating-label,
+textarea:not(:placeholder-shown) ~ .floating-label,
+select:focus ~ .floating-label,
+select:not([value=""]):valid ~ .floating-label {
+    @apply transform;
+    @apply scale-75;
+    @apply -translate-y-3;
+}

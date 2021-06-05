@@ -1,6 +1,7 @@
 import { FC, FormEvent } from "react";
 import { useRouter } from "next/router";
 
+import { FormControl } from "components";
 import { FormInputValidators, FormProvider, IFormData, useForm, useUser } from "context";
 import { songstagramApi } from "lib";
 
@@ -49,28 +50,34 @@ const Form: FC<{}> = ({}) => {
     };
 
     return (
-        <form action={action} className="w-full" method={method} onSubmit={onSubmit}>
-            <div className="flex flex-col">
-                <label htmlFor="email">Email</label>
-                <input
-                    className="border border-black"
+        <form action={action} className="w-full p-4 my-auto" method={method} onSubmit={onSubmit}>
+            <div className="space-y-2">
+                <FormControl
+                    floatingLabel
+                    isRequired
+                    label="Email"
+                    name="email"
+                    onChange={(value) => onChange("email", value)}
                     type="text"
-                    onChange={({ target }) => onChange("email", target?.value)}
                     value={formValues.email}
                 />
-            </div>
-            <div className="flex flex-col">
-                <label htmlFor="email">Password</label>
-                <input
-                    className="border border-black"
+                <FormControl
+                    floatingLabel
+                    isRequired
+                    label="Password"
+                    name="password"
+                    onChange={(value) => onChange("password", value)}
                     type="text"
-                    onChange={({ target }) => onChange("password", target?.value)}
                     value={formValues.password}
                 />
+                <button
+                    className="p-2 mt-2 text-white bg-blue-500"
+                    onClick={onSubmit}
+                    type="submit"
+                >
+                    Login
+                </button>
             </div>
-            <button className="p-2 mt-2 text-white bg-blue-500" onClick={onSubmit} type="submit">
-                Login
-            </button>
         </form>
     );
 };
