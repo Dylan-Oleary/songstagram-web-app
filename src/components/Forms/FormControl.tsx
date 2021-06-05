@@ -99,11 +99,11 @@ const FormControl: FC<FormControlProps> = ({
     type = "text",
     value
 }) => {
-    const controlClasses = new ClassNames("dark:bg-gray-6")
+    const controlClasses = new ClassNames()
         .add(className)
         .add(
             floatingLabel
-                ? "relative border px-4 py-2 focus-within:border-primary-3 focus-within:border-opacity-60 focus-within:ring-2 focus-within:ring-primary-3 focus-within:ring-opacity-60 h-12 flex flex-col justify-end"
+                ? "dark:bg-gray-2 relative border px-4 py-2 focus-within:border-primary-3 focus-within:border-opacity-60 focus-within:ring-2 focus-within:ring-primary-3 focus-within:ring-opacity-60 h-12 flex flex-col justify-end"
                 : "flex flex-col"
         )
         .add(
@@ -115,16 +115,16 @@ const FormControl: FC<FormControlProps> = ({
         .add(labelClassName)
         .add(
             floatingLabel
-                ? "absolute bottom-3 -z-1 floating-label duration-300 text-gray-3 origin-0"
+                ? "absolute bottom-3 floating-label duration-300 text-gray-3 dark:text-gray-6 origin-0"
                 : "order-1 mb-2"
         )
         .add(isRequired ? "" : "flex");
-    const inputClasses = new ClassNames("text-gray-1 w-full")
+    const inputClasses = new ClassNames("dark:text-white text-gray-1 w-full")
         .add(inputClassName)
         .add(
             floatingLabel
                 ? "h-5 appearance-none focus:outline-none bg-transparent"
-                : "border h-8 order-2 px-2 focus:outline-none focus:ring-2 focus:ring-primary-3 focus:ring-opacity-60"
+                : "dark:bg-gray-2 border h-8 order-2 px-2 focus:outline-none focus:ring-2 focus:ring-primary-3 focus:ring-opacity-60"
         )
         .add(
             !floatingLabel && errors?.length > 0
