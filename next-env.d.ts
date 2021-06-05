@@ -2,6 +2,7 @@
 /// <reference types="next/types/global" />
 
 declare module "*.svg";
+declare module "@heroicons/*";
 declare module "http" {
     interface IncomingMessage {
         cookies?: {

@@ -1,5 +1,6 @@
 import { FC, ReactNode } from "react";
 import { ClassNames } from "@44north/classnames";
+import { ExclamationIcon } from "@heroicons/react/solid";
 
 import { TextInput } from "components";
 
@@ -8,6 +9,10 @@ type FormControlProps = {
      * Classes to be applied to the wrapper element
      */
     className?: string | ClassNames;
+    /**
+     * Errors active on the input
+     */
+    errors?: Array<string>;
     /**
      * Use a floating label
      */
@@ -79,6 +84,7 @@ type FormControlProps = {
 
 const FormControl: FC<FormControlProps> = ({
     className = "",
+    errors = [],
     floatingLabel = false,
     inputClassName = "",
     isRequired = false,
@@ -93,12 +99,17 @@ const FormControl: FC<FormControlProps> = ({
     type = "text",
     value
 }) => {
-    const wrapperClasses = new ClassNames("dark:bg-gray-6")
+    const controlClasses = new ClassNames("dark:bg-gray-6")
         .add(className)
         .add(
             floatingLabel
-                ? "relative border rounded-lg border-gray-6 px-4 py-2 focus-within:border-primary-3 focus-within:border-opacity-60 focus-within:ring-2 focus-within:ring-primary-3 focus-within:ring-opacity-60 h-12 flex flex-col justify-end"
+                ? "relative border px-4 py-2 focus-within:border-primary-3 focus-within:border-opacity-60 focus-within:ring-2 focus-within:ring-primary-3 focus-within:ring-opacity-60 h-12 flex flex-col justify-end"
                 : "flex flex-col"
+        )
+        .add(
+            floatingLabel && errors?.length > 0
+                ? "rounded-t-lg border-core-red"
+                : "rounded-lg border-gray-6"
         );
     const labelClasses = new ClassNames()
         .add(labelClassName)
@@ -113,7 +124,12 @@ const FormControl: FC<FormControlProps> = ({
         .add(
             floatingLabel
                 ? "h-5 appearance-none focus:outline-none bg-transparent"
-                : "border rounded-lg border-gray-6 h-8 order-2 px-2 focus:outline-none focus:ring-2 focus:ring-primary-3 focus:ring-opacity-60"
+                : "border h-8 order-2 px-2 focus:outline-none focus:ring-2 focus:ring-primary-3 focus:ring-opacity-60"
+        )
+        .add(
+            !floatingLabel && errors?.length > 0
+                ? "rounded-t-lg border-core-red"
+                : "rounded-lg border-gray-6"
         );
     let control: JSX.Element;
 
@@ -140,13 +156,30 @@ const FormControl: FC<FormControlProps> = ({
     }
 
     return (
-        <div className={wrapperClasses.list()}>
-            {control}
-            {label && (
-                <label className={labelClasses.list()} htmlFor={name}>
-                    {label}
-                    {!isRequired && <span className="self-center ml-1 text-xs">(optional)</span>}
-                </label>
+        <div>
+            <div className={controlClasses.list()}>
+                {control}
+                {label && (
+                    <label className={labelClasses.list()} htmlFor={name}>
+                        {label}
+                        {!isRequired && (
+                            <span className="self-center ml-1 text-xs">(optional)</span>
+                        )}
+                    </label>
+                )}
+            </div>
+            {errors?.length > 0 && (
+                <ul className="px-4 py-2 text-white rounded-b-lg bg-core-red">
+                    {errors.map((error, index) => (
+                        <li
+                            key={`error-${name}-${index}`}
+                            className="flex items-center space-x-2 text-sm"
+                        >
+                            <ExclamationIcon className="w-5 h-5" />
+                            <span>{error}</span>
+                        </li>
+                    ))}
+                </ul>
             )}
         </div>
     );

@@ -53,7 +53,7 @@ const Form: FC<{}> = ({}) => {
         <form action={action} className="w-full p-4 my-auto" method={method} onSubmit={onSubmit}>
             <div className="space-y-2">
                 <FormControl
-                    floatingLabel
+                    errors={formErrors?.email || []}
                     isRequired
                     label="Email"
                     name="email"
@@ -62,6 +62,7 @@ const Form: FC<{}> = ({}) => {
                     value={formValues.email}
                 />
                 <FormControl
+                    errors={formErrors?.password || []}
                     floatingLabel
                     isRequired
                     label="Password"
@@ -90,7 +91,14 @@ const LoginForm: FC<{}> = ({}) => {
     const inputValidators: FormInputValidators = {
         email: [
             (value: string) => {
-                if (value.length > 10) return new Error("YO");
+                if (value.length > 10) return new Error("Please enter a valid email");
+
+                return;
+            }
+        ],
+        password: [
+            (value: string) => {
+                if (value.length > 10) return new Error("Please enter a valid password");
 
                 return;
             }
