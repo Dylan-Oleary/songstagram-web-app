@@ -1,8 +1,7 @@
-import { FC, FormEvent } from "react";
-import { useRouter } from "next/router";
+import { FC, FormEvent, MouseEvent } from "react";
 
-import { FormControl } from "components";
-import { FormInputValidators, FormProvider, IFormData, useForm, useUser } from "context";
+import { Button, FormControl } from "components";
+import { FormInputValidators, FormProvider, IFormData, useForm } from "context";
 import { songstagramApi } from "lib";
 
 interface ILoginFormData extends IFormData {
@@ -11,8 +10,6 @@ interface ILoginFormData extends IFormData {
 }
 
 const Form: FC<{}> = ({}) => {
-    const router = useRouter();
-    const { setAccessToken, setUser } = useUser();
     const { action, formErrors, formValues, method, onChange } = useForm<ILoginFormData>();
 
     /**
@@ -20,7 +17,7 @@ const Form: FC<{}> = ({}) => {
      *
      * @param event The form submission event
      */
-    const onSubmit: (event: FormEvent) => void = (event) => {
+    const onSubmit: (event?: FormEvent | MouseEvent) => void = (event) => {
         if (event) {
             event.preventDefault();
             event.stopPropagation();
@@ -32,18 +29,7 @@ const Form: FC<{}> = ({}) => {
             email: formValues.email,
             password: formValues.password
         })
-            .then(({ accessToken, user }) => {
-                setAccessToken(accessToken);
-                setUser({
-                    userNo: user.userNo,
-                    email: user.email,
-                    username: user.username,
-                    profilePicture: user.profilePicture,
-                    preferences: user.preferences
-                });
-
-                router.replace("/");
-            })
+            .then(() => window.location.replace("/"))
             .catch((error) => {
                 console.error(error);
             });
@@ -71,13 +57,9 @@ const Form: FC<{}> = ({}) => {
                     type="text"
                     value={formValues.password}
                 />
-                <button
-                    className="p-2 mt-2 text-white bg-blue-500"
-                    onClick={onSubmit}
-                    type="submit"
-                >
+                <Button onClick={onSubmit} type="submit">
                     Login
-                </button>
+                </Button>
             </div>
         </form>
     );
@@ -88,22 +70,7 @@ const LoginForm: FC<{}> = ({}) => {
         email: "",
         password: ""
     };
-    const inputValidators: FormInputValidators = {
-        email: [
-            (value: string) => {
-                if (value.length > 10) return new Error("Please enter a valid email");
-
-                return;
-            }
-        ],
-        password: [
-            (value: string) => {
-                if (value.length > 10) return new Error("Please enter a valid password");
-
-                return;
-            }
-        ]
-    };
+    const inputValidators: FormInputValidators = {};
 
     return (
         <FormProvider initialFormValues={initialFormValues} inputValidators={inputValidators}>
