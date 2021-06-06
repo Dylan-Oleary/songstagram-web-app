@@ -10,7 +10,8 @@ interface ILoginFormData extends IFormData {
 }
 
 const Form: FC<{}> = ({}) => {
-    const { action, formErrors, formValues, method, onChange } = useForm<ILoginFormData>();
+    const { action, formErrors, formValues, isSubmitting, method, onChange, setIsSubmitting } =
+        useForm<ILoginFormData>();
 
     /**
      * Function to execute on submission of the form
@@ -25,12 +26,14 @@ const Form: FC<{}> = ({}) => {
 
         if (Object.keys(formErrors || {}).length > 0) return;
 
+        setIsSubmitting(true);
         songstagramApi<{ accessToken: string; user: IBaseUser }>("/login", "POST", {
             email: formValues.email,
             password: formValues.password
         })
             .then(() => window.location.replace("/"))
             .catch((error) => {
+                setIsSubmitting(false);
                 console.error(error);
             });
     };
@@ -57,7 +60,7 @@ const Form: FC<{}> = ({}) => {
                     type="text"
                     value={formValues.password}
                 />
-                <Button ariaLabel="Login" onClick={onSubmit} type="submit">
+                <Button ariaLabel="Login" onClick={onSubmit} type="submit" isLoading={isSubmitting}>
                     Login
                 </Button>
             </div>

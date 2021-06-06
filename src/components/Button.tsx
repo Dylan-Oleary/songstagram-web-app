@@ -23,6 +23,10 @@ type ButtonProps = {
      */
     disabled?: boolean;
     /**
+     * Renders a loading spinner (useful for async operations)
+     */
+    isLoading?: boolean;
+    /**
      * Function to execute on click of the button
      */
     onClick: (event?: MouseEvent | FormEvent) => void;
@@ -51,6 +55,7 @@ const Button: FC<ButtonProps> = ({
     children,
     className = "",
     disabled = false,
+    isLoading = false,
     onClick = () => {},
     outline = false,
     size = "md",
@@ -197,7 +202,9 @@ const Button: FC<ButtonProps> = ({
             onClick={handleClick}
             type={type}
         >
-            <div className={childClasses.list()}>{children}</div>
+            <div className={childClasses.list()}>
+                {isLoading ? <div>Loading...</div> : children}
+            </div>
         </button>
     );
 };

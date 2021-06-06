@@ -1,4 +1,4 @@
-import { createContext, FC, useContext, useState } from "react";
+import { createContext, Dispatch, FC, SetStateAction, useContext, useState } from "react";
 
 export interface IFormData {
     [key: string]: Primitive;
@@ -45,6 +45,10 @@ export interface IFormContext<ExpectedFormData> {
      */
     formValues: ExpectedFormData;
     /**
+     * Is the form currently in the process of being submitted to the API?
+     */
+    isSubmitting: boolean;
+    /**
      * The form submission method
      */
     method: "POST" | "PUT";
@@ -52,6 +56,10 @@ export interface IFormContext<ExpectedFormData> {
      * Function to execute on change of an input
      */
     onChange: (field: string, value: Primitive) => void;
+    /**
+     * Set whether or not the form is currently being submitted
+     */
+    setIsSubmitting: Dispatch<SetStateAction<boolean>>;
 }
 
 const FormContext = createContext(undefined);
@@ -65,6 +73,7 @@ const FormProvider: FC<IFormProviderProps> = ({
 }) => {
     const [formValues, setFormValues] = useState<IFormData>(initialFormValues);
     const [formErrors, setFormErrors] = useState<FormErrors<IFormData>>({});
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     /**
      * Handles a form input change
@@ -112,8 +121,10 @@ const FormProvider: FC<IFormProviderProps> = ({
                 action,
                 formErrors,
                 formValues,
+                isSubmitting,
                 method,
-                onChange
+                onChange,
+                setIsSubmitting
             }}
         >
             {children}
