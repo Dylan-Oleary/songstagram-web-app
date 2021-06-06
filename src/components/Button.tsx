@@ -3,6 +3,10 @@ import { ClassNames } from "@44north/classnames";
 
 type ButtonProps = {
     /**
+     * The button's aria label
+     */
+    ariaLabel?: string;
+    /**
      * Controls the button's border radius
      */
     borderRadius?: "circle" | "rounded" | "none";
@@ -41,6 +45,7 @@ type ButtonProps = {
 };
 
 const Button: FC<ButtonProps> = ({
+    ariaLabel = "button",
     borderRadius = "rounded",
     childClassName = "",
     children,
@@ -186,6 +191,7 @@ const Button: FC<ButtonProps> = ({
 
     return (
         <button
+            aria-label={ariaLabel}
             className={buttonClasses.list()}
             disabled={disabled}
             onClick={handleClick}

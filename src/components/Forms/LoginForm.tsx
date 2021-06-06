@@ -57,7 +57,7 @@ const Form: FC<{}> = ({}) => {
                     type="text"
                     value={formValues.password}
                 />
-                <Button onClick={onSubmit} type="submit">
+                <Button ariaLabel="Login" onClick={onSubmit} type="submit">
                     Login
                 </Button>
             </div>
