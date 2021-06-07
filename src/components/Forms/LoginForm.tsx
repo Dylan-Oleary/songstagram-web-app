@@ -19,6 +19,7 @@ const Form: FC<{}> = ({}) => {
         isSubmitting,
         method,
         onChange,
+        onSubmit,
         setIsSubmitting,
         updateFormAlerts
     } = useForm<ILoginFormData>();
@@ -28,35 +29,33 @@ const Form: FC<{}> = ({}) => {
      *
      * @param event The form submission event
      */
-    const onSubmit: (event?: FormEvent | MouseEvent) => void = (event) => {
-        if (event) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
+    const handleSubmit: (event?: FormEvent | MouseEvent) => void = (event) => {
+        onSubmit(event, () =>
+            songstagramApi<{ accessToken: string; user: IBaseUser }>("/login", "POST", {
+                email: formValues.email,
+                password: formValues.password
+            })
+                .then(() => window.location.replace("/"))
+                .catch((error) => {
+                    let status = error?.response?.data?.status || 500;
+                    let message = "Incorrect email and/or password";
 
-        if (formAlerts?.alerts?.length > 0) updateFormAlerts();
-        if (Object.keys(formErrors || {}).length > 0) return;
+                    if (new RegExp(/5\d{2}/gi).test(status))
+                        message = "Sorry! Login is currently unavailable.";
 
-        setIsSubmitting(true);
-        songstagramApi<{ accessToken: string; user: IBaseUser }>("/login", "POST", {
-            email: formValues.email,
-            password: formValues.password
-        })
-            .then(() => window.location.replace("/"))
-            .catch((error) => {
-                let status = error?.response?.data?.status || 500;
-                let message = "Incorrect email and/or password";
-
-                if (new RegExp(/5\d{2}/gi).test(status))
-                    message = "Sorry! Login is currently unavailable.";
-
-                updateFormAlerts(message);
-                setIsSubmitting(false);
-            });
+                    updateFormAlerts(message);
+                    setIsSubmitting(false);
+                })
+        );
     };
 
     return (
-        <form action={action} className="w-full p-4 my-auto" method={method} onSubmit={onSubmit}>
+        <form
+            action={action}
+            className="w-full p-4 my-auto"
+            method={method}
+            onSubmit={handleSubmit}
+        >
             <div className="space-y-2">
                 {formAlerts?.alerts?.length > 0 && (
                     <Alert theme={formAlerts.theme}>
@@ -85,7 +84,12 @@ const Form: FC<{}> = ({}) => {
                     type="password"
                     value={formValues.password}
                 />
-                <Button ariaLabel="Login" onClick={onSubmit} type="submit" isLoading={isSubmitting}>
+                <Button
+                    ariaLabel="Login"
+                    onClick={handleSubmit}
+                    type="submit"
+                    isLoading={isSubmitting}
+                >
                     Login
                 </Button>
             </div>

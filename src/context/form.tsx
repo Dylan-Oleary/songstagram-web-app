@@ -1,4 +1,13 @@
-import { createContext, Dispatch, FC, SetStateAction, useContext, useState } from "react";
+import {
+    createContext,
+    Dispatch,
+    FC,
+    FormEvent,
+    MouseEvent,
+    SetStateAction,
+    useContext,
+    useState
+} from "react";
 
 export interface IFormData {
     [key: string]: Primitive;
@@ -70,6 +79,10 @@ export interface IFormContext<ExpectedFormData> {
      */
     isSubmitting: boolean;
     /**
+     * Enables live validation on a form input
+     */
+    liveValidation: boolean;
+    /**
      * The form submission method
      */
     method: "POST" | "PUT";
@@ -78,6 +91,10 @@ export interface IFormContext<ExpectedFormData> {
      */
     onChange: (field: string, value: Primitive) => void;
     /**
+     * Function to execute on form submission
+     */
+    onSubmit: (event: FormEvent | MouseEvent, submit: () => Promise<void>) => void;
+    /**
      * Set whether or not the form is currently being submitted
      */
     setIsSubmitting: Dispatch<SetStateAction<boolean>>;
@@ -85,6 +102,10 @@ export interface IFormContext<ExpectedFormData> {
      * Updates the current form alerts and the theme to display
      */
     updateFormAlerts: (newAlerts?: string | string[], theme?: AlertTheme) => void;
+    /**
+     * Validates a form submission before sending a request to the API
+     */
+    validateSubmission: (formData: ExpectedFormData) => boolean;
 }
 
 const FormContext = createContext(undefined);
@@ -106,6 +127,7 @@ const FormProvider: FC<IFormProviderProps> = ({
         theme: "warning"
     });
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [liveValidation, setLiveValidation] = useState<boolean>(false);
 
     /**
      * Handles a form input change
@@ -119,7 +141,28 @@ const FormProvider: FC<IFormProviderProps> = ({
             [field]: value
         });
 
-        if (inputControl[field]?.validators) validateInput(field, value);
+        if ((inputControl[field]?.validators || inputControl[field]?.isRequired) && liveValidation)
+            validateInput(field, value);
+    };
+
+    /**
+     * Handles submission of the form
+     *
+     * @param event The form submission event
+     * @param submit The callback to execute upon successful form validation
+     */
+    const onSubmit: (event: FormEvent | MouseEvent, submit: () => Promise<void>) => void = (
+        event,
+        submit
+    ) => {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        if (!validateSubmission(formValues)) return;
+
+        submit();
     };
 
     /**
@@ -156,7 +199,12 @@ const FormProvider: FC<IFormProviderProps> = ({
         const updatedFormErrors = { ...formErrors };
         const inputErrors: string[] = [];
 
-        for (const validation of inputControl[field]?.validators) {
+        if (inputControl[field]?.isRequired) {
+            if (!value || (value as string).trim() === "")
+                inputErrors.push(`${inputControl[field].label} is a required field`);
+        }
+
+        for (const validation of inputControl[field]?.validators || []) {
             const error = validation(value) as Error;
 
             if (error?.message) inputErrors.push(error.message);
@@ -171,6 +219,50 @@ const FormProvider: FC<IFormProviderProps> = ({
         setFormErrors(updatedFormErrors);
     };
 
+    /**
+     * Validates a form submission before sending a request to the API
+     *
+     * @param formData The current form data
+     */
+    const validateSubmission: (formData: IFormData) => boolean = (formData) => {
+        let isValidSubmission = true;
+        const formErrors = {};
+
+        for (const key of Object.keys(inputControl)) {
+            const inputErrors: string[] = [];
+
+            if (inputControl[key]?.isRequired) {
+                if (!formData[key] || (formData[key] as string).trim() === "")
+                    inputErrors.push(`${inputControl[key].label} is a required field`);
+            }
+
+            for (const validation of inputControl[key]?.validators || []) {
+                const error = validation(formData[key]) as Error;
+
+                if (error?.message) inputErrors.push(error.message);
+            }
+
+            if (inputErrors.length > 0) formErrors[key] = inputErrors;
+        }
+
+        if (Object.keys(formErrors).length > 0) {
+            isValidSubmission = false;
+
+            setLiveValidation(true);
+            setFormErrors(formErrors);
+            updateFormAlerts(
+                "Some fields are missing or are incorrect. Please fix them before submitting."
+            );
+        }
+
+        if (isValidSubmission) {
+            setIsSubmitting(true);
+            if (formAlerts?.alerts?.length > 0) updateFormAlerts();
+        }
+
+        return isValidSubmission;
+    };
+
     return (
         <FormContext.Provider
             value={{
@@ -182,8 +274,10 @@ const FormProvider: FC<IFormProviderProps> = ({
                 isSubmitting,
                 method,
                 onChange,
+                onSubmit,
                 setIsSubmitting,
-                updateFormAlerts
+                updateFormAlerts,
+                validateSubmission
             }}
         >
             {children}
