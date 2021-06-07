@@ -2,6 +2,7 @@
 /// <reference types="next/types/global" />
 
 declare module "*.svg";
+declare module "@heroicons/*";
 declare module "http" {
     interface IncomingMessage {
         cookies?: {
@@ -17,6 +18,7 @@ declare type RestMethod = "GET" | "POST" | "PUT" | "DELETE";
 declare interface ILooseObject {
     [key: string]: any;
 }
+declare type Primitive = string | number | boolean | Date;
 declare type ServerError = {
     status: number | null;
     message: string | null;
@@ -38,3 +40,4 @@ declare interface IGraphQlError {
         details: string[];
     };
 }
+declare type AlertTheme = "danger" | "info" | "success" | "warning";

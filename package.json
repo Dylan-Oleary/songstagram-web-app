@@ -18,7 +18,9 @@
     "code:clean": "concurrently -n Linter,Prettier -c magenta,green \"yarn lint\" \"yarn prettier\""
   },
   "dependencies": {
+    "@44north/classnames": "^0.1.0",
     "@apollo/client": "^3.3.19",
+    "@heroicons/react": "^1.0.1",
     "axios": "^0.21.1",
     "cookies": "^0.8.0",
     "graphql": "^15.5.0",
@@ -27,6 +29,7 @@
     "react-dom": "17.0.2"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.3.3",
     "@types/axios": "^0.14.0",
     "@types/cookies": "^0.7.6",
     "@types/node": "^15.6.0",
