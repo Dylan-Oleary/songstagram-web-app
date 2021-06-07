@@ -1,6 +1,9 @@
 # Changelog
 
 ## 0.3.0
+- Add Alert & Button components
+- Add Text & Password form control components
+- Form context
 
 ## 0.2.0
 - Add base tailwind configuration
