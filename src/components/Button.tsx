@@ -23,6 +23,10 @@ type ButtonProps = {
      */
     disabled?: boolean;
     /**
+     * Should the button take up the full width of its parent container?
+     */
+    fullWidth?: boolean;
+    /**
      * Renders a loading spinner (useful for async operations)
      */
     isLoading?: boolean;
@@ -55,6 +59,7 @@ const Button: FC<ButtonProps> = ({
     children,
     className = "",
     disabled = false,
+    fullWidth = false,
     isLoading = false,
     onClick = () => {},
     outline = false,
@@ -68,6 +73,7 @@ const Button: FC<ButtonProps> = ({
             : ""
     )
         .add(borderRadius !== "none" ? "rounded-lg" : "")
+        .add(fullWidth ? "w-full" : "")
         .add(className);
     let childClasses = new ClassNames().add(childClassName);
 
