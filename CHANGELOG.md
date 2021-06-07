@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.4.0
+
 ## 0.3.0
 - Add Alert & Button components
 - Add Text & Password form control components
