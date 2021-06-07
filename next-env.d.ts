@@ -40,3 +40,4 @@ declare interface IGraphQlError {
         details: string[];
     };
 }
+declare type AlertTheme = "danger" | "info" | "success" | "warning";

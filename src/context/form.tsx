@@ -12,6 +12,17 @@ export type FormErrors<ExpectedFormData> = {
     [Property in keyof ExpectedFormData]: Array<string>;
 };
 
+export type FormAlerts = {
+    /**
+     * The alert messages to display
+     */
+    alerts: Array<string>;
+    /**
+     * The theme used on the alert
+     */
+    theme: AlertTheme;
+};
+
 export interface IFormProviderProps {
     /**
      * The location of the form submission
@@ -37,6 +48,10 @@ export interface IFormContext<ExpectedFormData> {
      */
     action: string;
     /**
+     * The form alerts
+     */
+    formAlerts: FormAlerts;
+    /**
      * The form errors
      */
     formErrors: FormErrors<ExpectedFormData>;
@@ -60,6 +75,10 @@ export interface IFormContext<ExpectedFormData> {
      * Set whether or not the form is currently being submitted
      */
     setIsSubmitting: Dispatch<SetStateAction<boolean>>;
+    /**
+     * Updates the current form alerts and the theme to display
+     */
+    updateFormAlerts: (newAlerts?: string | string[], theme?: AlertTheme) => void;
 }
 
 const FormContext = createContext(undefined);
@@ -73,6 +92,10 @@ const FormProvider: FC<IFormProviderProps> = ({
 }) => {
     const [formValues, setFormValues] = useState<IFormData>(initialFormValues);
     const [formErrors, setFormErrors] = useState<FormErrors<IFormData>>({});
+    const [formAlerts, setFormAlerts] = useState<FormAlerts>({
+        alerts: [],
+        theme: "warning"
+    });
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     /**
@@ -88,6 +111,30 @@ const FormProvider: FC<IFormProviderProps> = ({
         });
 
         if (inputValidators[field]) validateInput(field, value);
+    };
+
+    /**
+     * Updates the current form alerts and the theme to display
+     *
+     * @param newAlerts The new alerts to display
+     * @param theme The alert theme to use
+     */
+    const updateFormAlerts: (newAlerts?: string | string[], theme?: AlertTheme) => void = (
+        newAlerts = [],
+        theme = "warning"
+    ) => {
+        let alerts = [];
+
+        if (!Array.isArray(newAlerts)) {
+            alerts.push(newAlerts);
+        } else {
+            alerts = [...newAlerts];
+        }
+
+        setFormAlerts({
+            alerts,
+            theme
+        });
     };
 
     /**
@@ -119,12 +166,14 @@ const FormProvider: FC<IFormProviderProps> = ({
         <FormContext.Provider
             value={{
                 action,
+                formAlerts,
                 formErrors,
                 formValues,
                 isSubmitting,
                 method,
                 onChange,
-                setIsSubmitting
+                setIsSubmitting,
+                updateFormAlerts
             }}
         >
             {children}

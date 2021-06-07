@@ -108,7 +108,7 @@ const FormControl: FC<FormControlProps> = ({
         )
         .add(
             floatingLabel && errors?.length > 0
-                ? "rounded-t-lg border-core-red"
+                ? "rounded-t-lg border-danger-3"
                 : "rounded-lg border-gray-6"
         );
     const labelClasses = new ClassNames()
@@ -128,7 +128,7 @@ const FormControl: FC<FormControlProps> = ({
         )
         .add(
             !floatingLabel && errors?.length > 0
-                ? "rounded-t-lg border-core-red"
+                ? "rounded-t-lg border-danger-3"
                 : "rounded-lg border-gray-6"
         );
     let control: JSX.Element;
@@ -169,7 +169,7 @@ const FormControl: FC<FormControlProps> = ({
                 )}
             </div>
             {errors?.length > 0 && (
-                <ul className="px-4 py-2 text-white rounded-b-lg bg-core-red">
+                <ul className="px-4 py-2 text-white rounded-b-lg bg-danger-3">
                     {errors.map((error, index) => (
                         <li
                             key={`error-${name}-${index}`}

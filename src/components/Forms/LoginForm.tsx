@@ -1,6 +1,6 @@
 import { FC, FormEvent, MouseEvent } from "react";
 
-import { Button, FormControl } from "components";
+import { Alert, Button, FormControl } from "components";
 import { FormInputValidators, FormProvider, IFormData, useForm } from "context";
 import { songstagramApi } from "lib";
 
@@ -10,8 +10,17 @@ interface ILoginFormData extends IFormData {
 }
 
 const Form: FC<{}> = ({}) => {
-    const { action, formErrors, formValues, isSubmitting, method, onChange, setIsSubmitting } =
-        useForm<ILoginFormData>();
+    const {
+        action,
+        formAlerts,
+        formErrors,
+        formValues,
+        isSubmitting,
+        method,
+        onChange,
+        setIsSubmitting,
+        updateFormAlerts
+    } = useForm<ILoginFormData>();
 
     /**
      * Function to execute on submission of the form
@@ -24,6 +33,7 @@ const Form: FC<{}> = ({}) => {
             event.stopPropagation();
         }
 
+        if (formAlerts?.alerts?.length > 0) updateFormAlerts();
         if (Object.keys(formErrors || {}).length > 0) return;
 
         setIsSubmitting(true);
@@ -33,16 +43,30 @@ const Form: FC<{}> = ({}) => {
         })
             .then(() => window.location.replace("/"))
             .catch((error) => {
+                let status = error?.response?.data?.status || 500;
+                let message = "Incorrect email and/or password";
+
+                if (new RegExp(/5\d{2}/gi).test(status))
+                    message = "Sorry! Login is currently unavailable.";
+
+                updateFormAlerts(message);
                 setIsSubmitting(false);
-                console.error(error);
             });
     };
 
     return (
         <form action={action} className="w-full p-4 my-auto" method={method} onSubmit={onSubmit}>
             <div className="space-y-2">
+                {formAlerts?.alerts?.length > 0 && (
+                    <Alert theme={formAlerts.theme}>
+                        {formAlerts.alerts.map((alert, index) => (
+                            <p key={`alert-${index}`}>{alert}</p>
+                        ))}
+                    </Alert>
+                )}
                 <FormControl
                     errors={formErrors?.email || []}
+                    floatingLabel
                     isRequired
                     label="Email"
                     name="email"
