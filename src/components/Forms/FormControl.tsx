@@ -2,7 +2,7 @@ import { FC, ReactNode } from "react";
 import { ClassNames } from "@44north/classnames";
 import { ExclamationIcon } from "@heroicons/react/solid";
 
-import { TextInput } from "components";
+import { PasswordInput, TextInput } from "components";
 
 type FormControlProps = {
     /**
@@ -63,7 +63,7 @@ type FormControlProps = {
     value: string | number;
 } & (
     | {
-          type: "text" | "textarea";
+          type: "password" | "text" | "textarea";
           maxLength?: number;
           minLength?: number;
           max?: never;
@@ -134,6 +134,16 @@ const FormControl: FC<FormControlProps> = ({
     let control: JSX.Element;
 
     switch (type) {
+        case "password":
+            control = (
+                <PasswordInput
+                    className={inputClasses}
+                    name={name}
+                    onChange={onChange as (value: string) => void}
+                    value={value as string}
+                />
+            );
+            break;
         case "text":
             control = (
                 <TextInput

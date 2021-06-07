@@ -41,7 +41,7 @@ type ButtonProps = {
     /**
      * The size of the button
      */
-    size?: "xs" | "sm" | "md" | "lg";
+    size?: "xs" | "sm" | "md" | "lg" | "none";
     /**
      * The button styles to be applied
      */
@@ -108,6 +108,8 @@ const Button: FC<ButtonProps> = ({
                     "text-secondary-3 border border-secondary-3 focus:ring-secondary-4 hover:bg-secondary-2 hover:border-secondary-2 active:bg-secondary-1 active:border-secondary-1"
                 );
                 break;
+            case "none":
+                break;
             default:
                 buttonClasses.add(
                     "text-primary-3 border border-primary-3 focus:ring-primary-4 hover:bg-primary-2 hover:border-primary-2 active:bg-primary-1 active:border-primary-1"
@@ -125,6 +127,8 @@ const Button: FC<ButtonProps> = ({
                 buttonClasses.add(
                     "bg-secondary-3 text-white border border-secondary-3 focus:ring-secondary-4 hover:bg-secondary-2 active:bg-secondary-1"
                 );
+                break;
+            case "none":
                 break;
             default:
                 buttonClasses.add(
@@ -192,6 +196,8 @@ const Button: FC<ButtonProps> = ({
             case "lg":
                 buttonClasses.add("py-6 px-10");
                 childClasses.add("text-3xl");
+                break;
+            case "none":
                 break;
             default:
                 buttonClasses.add("py-3 px-7");

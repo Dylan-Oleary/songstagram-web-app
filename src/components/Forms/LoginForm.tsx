@@ -81,7 +81,7 @@ const Form: FC<{}> = ({}) => {
                     label="Password"
                     name="password"
                     onChange={(value) => onChange("password", value)}
-                    type="text"
+                    type="password"
                     value={formValues.password}
                 />
                 <Button ariaLabel="Login" onClick={onSubmit} type="submit" isLoading={isSubmitting}>
