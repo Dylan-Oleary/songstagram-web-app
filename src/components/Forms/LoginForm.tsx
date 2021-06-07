@@ -1,7 +1,7 @@
 import { FC, FormEvent, MouseEvent } from "react";
 
 import { Alert, Button, FormControl } from "components";
-import { FormInputValidators, FormProvider, IFormData, useForm } from "context";
+import { FormInputControl, FormProvider, IFormData, useForm } from "context";
 import { songstagramApi } from "lib";
 
 interface ILoginFormData extends IFormData {
@@ -15,6 +15,7 @@ const Form: FC<{}> = ({}) => {
         formAlerts,
         formErrors,
         formValues,
+        inputControl,
         isSubmitting,
         method,
         onChange,
@@ -67,20 +68,20 @@ const Form: FC<{}> = ({}) => {
                 <FormControl
                     errors={formErrors?.email || []}
                     floatingLabel
-                    isRequired
-                    label="Email"
-                    name="email"
-                    onChange={(value) => onChange("email", value)}
+                    isRequired={inputControl?.email?.isRequired || false}
+                    label={inputControl?.email?.label}
+                    name={inputControl?.email?.name}
+                    onChange={(value) => onChange(inputControl.email.name, value)}
                     type="text"
                     value={formValues.email}
                 />
                 <FormControl
                     errors={formErrors?.password || []}
                     floatingLabel
-                    isRequired
-                    label="Password"
-                    name="password"
-                    onChange={(value) => onChange("password", value)}
+                    isRequired={inputControl?.password?.isRequired || false}
+                    label={inputControl?.password?.label}
+                    name={inputControl?.password?.name}
+                    onChange={(value) => onChange(inputControl?.password?.name, value)}
                     type="password"
                     value={formValues.password}
                 />
@@ -93,14 +94,23 @@ const Form: FC<{}> = ({}) => {
 };
 
 const LoginForm: FC<{}> = ({}) => {
-    const initialFormValues: ILoginFormData = {
-        email: "",
-        password: ""
+    const inputControl: FormInputControl<ILoginFormData> = {
+        email: {
+            initialValue: "",
+            isRequired: true,
+            label: "Email",
+            name: "email"
+        },
+        password: {
+            initialValue: "",
+            isRequired: true,
+            label: "Password",
+            name: "password"
+        }
     };
-    const inputValidators: FormInputValidators = {};
 
     return (
-        <FormProvider initialFormValues={initialFormValues} inputValidators={inputValidators}>
+        <FormProvider inputControl={inputControl}>
             <Form />
         </FormProvider>
     );

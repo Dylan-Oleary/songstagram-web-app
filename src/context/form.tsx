@@ -4,12 +4,18 @@ export interface IFormData {
     [key: string]: Primitive;
 }
 
-export type FormInputValidators = {
-    [key: string]: Array<(value: Primitive) => Error | void>;
-};
-
 export type FormErrors<ExpectedFormData> = {
     [Property in keyof ExpectedFormData]: Array<string>;
+};
+
+export type FormInputControl<ExpectedFormData = IFormData> = {
+    [Property in keyof ExpectedFormData]: {
+        initialValue: Primitive;
+        isRequired?: boolean;
+        label: string;
+        name: string;
+        validators?: Array<(value: Primitive) => Error | void>;
+    };
 };
 
 export type FormAlerts = {
@@ -33,13 +39,9 @@ export interface IFormProviderProps {
      */
     method?: "POST" | "PUT";
     /**
-     * The initial form values
+     * Configuation used for the form inputs
      */
-    initialFormValues: IFormData;
-    /**
-     * An object that stores each field's validation logic
-     */
-    inputValidators: FormInputValidators;
+    inputControl: FormInputControl;
 }
 
 export interface IFormContext<ExpectedFormData> {
@@ -59,6 +61,10 @@ export interface IFormContext<ExpectedFormData> {
      * The form values
      */
     formValues: ExpectedFormData;
+    /**
+     * Configuation used for the form inputs
+     */
+    inputControl: FormInputControl<ExpectedFormData>;
     /**
      * Is the form currently in the process of being submitted to the API?
      */
@@ -86,11 +92,14 @@ const FormContext = createContext(undefined);
 const FormProvider: FC<IFormProviderProps> = ({
     action = "",
     children,
-    initialFormValues = {},
-    inputValidators = {},
+    inputControl,
     method = "POST"
 }) => {
-    const [formValues, setFormValues] = useState<IFormData>(initialFormValues);
+    const [formValues, setFormValues] = useState<IFormData>(
+        Object.fromEntries(
+            Object.keys(inputControl).map((key) => [key, inputControl[key].initialValue])
+        )
+    );
     const [formErrors, setFormErrors] = useState<FormErrors<IFormData>>({});
     const [formAlerts, setFormAlerts] = useState<FormAlerts>({
         alerts: [],
@@ -110,7 +119,7 @@ const FormProvider: FC<IFormProviderProps> = ({
             [field]: value
         });
 
-        if (inputValidators[field]) validateInput(field, value);
+        if (inputControl[field]?.validators) validateInput(field, value);
     };
 
     /**
@@ -147,7 +156,7 @@ const FormProvider: FC<IFormProviderProps> = ({
         const updatedFormErrors = { ...formErrors };
         const inputErrors: string[] = [];
 
-        for (const validation of inputValidators[field]) {
+        for (const validation of inputControl[field]?.validators) {
             const error = validation(value) as Error;
 
             if (error?.message) inputErrors.push(error.message);
@@ -169,6 +178,7 @@ const FormProvider: FC<IFormProviderProps> = ({
                 formAlerts,
                 formErrors,
                 formValues,
+                inputControl,
                 isSubmitting,
                 method,
                 onChange,
