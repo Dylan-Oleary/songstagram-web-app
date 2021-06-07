@@ -1,15 +1,16 @@
 import { FC, FormEvent, MouseEvent } from "react";
 
 import { Alert, Button, FormControl } from "components";
-import { FormInputControl, FormProvider, IFormData, useForm } from "context";
+import { FormInputControl, FormProvider, IFormData, IFormComponentProps, useForm } from "context";
 import { songstagramApi } from "lib";
+import ClassNames from "@44north/classnames";
 
 interface ILoginFormData extends IFormData {
     email: string;
     password: string;
 }
 
-const Form: FC<{}> = ({}) => {
+const Form: FC<IFormComponentProps> = ({ className = "" }) => {
     const {
         action,
         formAlerts,
@@ -52,52 +53,53 @@ const Form: FC<{}> = ({}) => {
     return (
         <form
             action={action}
-            className="w-full p-4 my-auto"
+            className={className as string}
             method={method}
             onSubmit={handleSubmit}
         >
-            <div className="space-y-2">
-                {formAlerts?.alerts?.length > 0 && (
-                    <Alert theme={formAlerts.theme}>
-                        {formAlerts.alerts.map((alert, index) => (
-                            <p key={`alert-${index}`}>{alert}</p>
-                        ))}
-                    </Alert>
-                )}
-                <FormControl
-                    errors={formErrors?.email || []}
-                    floatingLabel
-                    isRequired={inputControl?.email?.isRequired || false}
-                    label={inputControl?.email?.label}
-                    name={inputControl?.email?.name}
-                    onChange={(value) => onChange(inputControl.email.name, value)}
-                    type="text"
-                    value={formValues.email}
-                />
-                <FormControl
-                    errors={formErrors?.password || []}
-                    floatingLabel
-                    isRequired={inputControl?.password?.isRequired || false}
-                    label={inputControl?.password?.label}
-                    name={inputControl?.password?.name}
-                    onChange={(value) => onChange(inputControl?.password?.name, value)}
-                    type="password"
-                    value={formValues.password}
-                />
-                <Button
-                    ariaLabel="Login"
-                    onClick={handleSubmit}
-                    type="submit"
-                    isLoading={isSubmitting}
-                >
-                    Login
-                </Button>
-            </div>
+            {formAlerts?.alerts?.length > 0 && (
+                <Alert theme={formAlerts.theme}>
+                    {formAlerts.alerts.map((alert, index) => (
+                        <p key={`alert-${index}`}>{alert}</p>
+                    ))}
+                </Alert>
+            )}
+            <FormControl
+                errors={formErrors?.email || []}
+                floatingLabel
+                isRequired={inputControl?.email?.isRequired || false}
+                label={inputControl?.email?.label}
+                name={inputControl?.email?.name}
+                onChange={(value) => onChange(inputControl.email.name, value)}
+                type="text"
+                value={formValues.email}
+            />
+            <FormControl
+                errors={formErrors?.password || []}
+                floatingLabel
+                isRequired={inputControl?.password?.isRequired || false}
+                label={inputControl?.password?.label}
+                name={inputControl?.password?.name}
+                onChange={(value) => onChange(inputControl?.password?.name, value)}
+                type="password"
+                value={formValues.password}
+            />
+            <Button
+                ariaLabel="Login"
+                childClassName="font-medium"
+                fullWidth
+                onClick={handleSubmit}
+                type="submit"
+                isLoading={isSubmitting}
+            >
+                Sign in
+            </Button>
         </form>
     );
 };
 
-const LoginForm: FC<{}> = ({}) => {
+const LoginForm: FC<IFormComponentProps> = ({ className = "" }) => {
+    const formClasses = new ClassNames().add(className);
     const inputControl: FormInputControl<ILoginFormData> = {
         email: {
             initialValue: "",
@@ -115,7 +117,7 @@ const LoginForm: FC<{}> = ({}) => {
 
     return (
         <FormProvider inputControl={inputControl}>
-            <Form />
+            <Form className={formClasses.list()} />
         </FormProvider>
     );
 };
