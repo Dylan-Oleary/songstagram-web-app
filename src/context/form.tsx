@@ -8,6 +8,14 @@ import {
     useContext,
     useState
 } from "react";
+import { ClassNames } from "@44north/classnames";
+
+export interface IFormComponentProps {
+    /**
+     * Classes to be applied to the form element
+     */
+    className?: string | ClassNames;
+}
 
 export interface IFormData {
     [key: string]: Primitive;

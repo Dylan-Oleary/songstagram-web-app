@@ -45,8 +45,8 @@ const AuthenticatedLayout: FC<{}> = ({ children }) => {
     return (
         user &&
         accessToken && (
-            <div className="flex w-full h-screen antialiased text-gray-700">
-                <main className="flex-grow max-w-4xl px-8 mx-auto">{children}</main>
+            <div className="flex w-full h-screen text-gray-700">
+                <div className="flex-grow max-w-4xl px-8 mx-auto">{children}</div>
             </div>
         )
     );
