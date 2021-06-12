@@ -41,3 +41,9 @@ declare interface IGraphQlError {
     };
 }
 declare type AlertTheme = "danger" | "info" | "success" | "warning";
+declare type NavigationItem = {
+    name: string;
+    href: string;
+    icon?: (props: SVGProps<SVGSVGElement>) => JSX.Element 
+    current: boolean;
+};

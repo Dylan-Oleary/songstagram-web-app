@@ -20,6 +20,7 @@
   "dependencies": {
     "@44north/classnames": "^0.1.0",
     "@apollo/client": "^3.3.19",
+    "@headlessui/react": "^1.2.0",
     "@heroicons/react": "^1.0.1",
     "axios": "^0.21.1",
     "cookies": "^0.8.0",
