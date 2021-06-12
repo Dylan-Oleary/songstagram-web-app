@@ -1,12 +1,5 @@
 import { Dispatch, FC, SetStateAction } from "react";
-import {
-    CalendarIcon,
-    ChartBarIcon,
-    FolderIcon,
-    HomeIcon,
-    InboxIcon,
-    UsersIcon
-} from "@heroicons/react/outline";
+import { GlobeIcon, HomeIcon } from "@heroicons/react/outline";
 
 import { DesktopNavigation, MobileNavigation } from "components";
 
@@ -22,12 +15,13 @@ interface INavigationProps {
 }
 
 const navigation = [
-    { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
-    { name: "Team", href: "#", icon: UsersIcon, current: false },
-    { name: "Projects", href: "#", icon: FolderIcon, current: false },
-    { name: "Calendar", href: "#", icon: CalendarIcon, current: false },
-    { name: "Documents", href: "#", icon: InboxIcon, current: false },
-    { name: "Reports", href: "#", icon: ChartBarIcon, current: false }
+    { name: "Home", href: "/", icon: HomeIcon, current: true },
+    {
+        name: "Explore",
+        href: "/explore",
+        icon: GlobeIcon,
+        current: false
+    }
 ];
 
 const Navigation: FC<INavigationProps> = ({ isOpen = false, setIsOpen }) => {
