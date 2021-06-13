@@ -1,9 +1,9 @@
 import { FC } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { MailIcon, PhoneIcon } from "@heroicons/react/outline";
 import { ClassNames } from "@44north/classnames";
 
+import { Avatar } from "components";
 import { useUser } from "context";
 import { songstagramApi } from "lib";
 
@@ -35,18 +35,11 @@ const ProfileHeader: FC<IProfileHeaderProps> = ({ className = "" }) => {
         <div className={wrapperClasses.list()}>
             <div className="px-2">
                 <div className="flex items-center space-x-4 lg:space-x-6">
-                    <img
-                        className="w-24 h-24 bg-white rounded-full ring-4 ring-white sm:h-28 sm:w-28"
-                        src={
-                            user?.profilePicture ||
-                            "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        }
-                        alt=""
-                    />
+                    <Avatar alt={`User avatar for ${user?.username}`} src={user?.profilePicture} />
                     <div>
                         <h2 className="text-4xl">{user.username}</h2>
                         <div className="flex space-x-2">
-                            <Link href="profile">
+                            <Link href="/profile">
                                 <a>Edit Profile</a>
                             </Link>
                             <button onClick={logout}>Logout</button>
