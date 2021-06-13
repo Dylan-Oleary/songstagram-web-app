@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import { ClassNames } from "@44north/classnames";
+import ProfileHeader from "components/ProfileHeader";
 
 interface IMobileNavigationProps {
     /**
@@ -53,7 +54,7 @@ const MobileNavigation: FC<IMobileNavigationProps> = ({
                     leaveFrom="translate-x-0"
                     leaveTo="-translate-x-full"
                 >
-                    <div className="relative flex flex-col flex-1 w-full max-w-xs bg-gray-800">
+                    <div className="relative flex flex-col flex-1 w-full max-w-xs bg-white dark:bg-dark">
                         <Transition.Child
                             as={Fragment}
                             enter="ease-in-out duration-300"
@@ -74,21 +75,15 @@ const MobileNavigation: FC<IMobileNavigationProps> = ({
                             </div>
                         </Transition.Child>
                         <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
-                            <div className="flex items-center flex-shrink-0 px-4">
-                                <img
-                                    className="w-auto h-8"
-                                    src="https://tailwindui.com/img/logos/workflow-logo-indigo-500-mark-white-text.svg"
-                                    alt="Workflow"
-                                />
-                            </div>
+                            <ProfileHeader />
                             <nav className="px-2 mt-5 space-y-1">
                                 {navigation.map((item) => (
                                     <Link href={item.href} key={item.name}>
                                         <a
                                             className={new ClassNames(
                                                 item.current
-                                                    ? "bg-gray-900 text-white"
-                                                    : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                                                    ? "bg-gray-3 text-white"
+                                                    : "dark:text-white  hover:bg-gray-700 hover:text-white",
                                                 "group flex items-center px-2 py-2 text-base font-medium rounded-md"
                                             ).list()}
                                         >
@@ -106,29 +101,6 @@ const MobileNavigation: FC<IMobileNavigationProps> = ({
                                     </Link>
                                 ))}
                             </nav>
-                        </div>
-                        <div className="flex flex-shrink-0 p-4 bg-gray-700">
-                            <Link href="/">
-                                <a className="flex-shrink-0 block group">
-                                    <div className="flex items-center">
-                                        <div>
-                                            <img
-                                                className="inline-block w-10 h-10 rounded-full"
-                                                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                                alt=""
-                                            />
-                                        </div>
-                                        <div className="ml-3">
-                                            <p className="text-base font-medium text-white">
-                                                Tom Cook
-                                            </p>
-                                            <p className="text-sm font-medium text-gray-400 group-hover:text-gray-300">
-                                                View profile
-                                            </p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </Link>
                         </div>
                     </div>
                 </Transition.Child>

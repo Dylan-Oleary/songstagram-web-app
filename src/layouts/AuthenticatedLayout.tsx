@@ -48,7 +48,7 @@ const AuthenticatedLayout: FC<{}> = ({ children }) => {
     return (
         user &&
         accessToken && (
-            <div className="flex h-screen overflow-hidden bg-gray-100">
+            <div className="flex h-screen overflow-hidden bg-gray-100 dark:bg-gray-2">
                 <Navigation isOpen={isOpen} setIsOpen={setIsOpen} />
                 <div className="flex flex-col flex-1 w-0 overflow-hidden">
                     <div className="pt-1 pl-1 md:hidden sm:pl-3 sm:pt-3">
@@ -63,7 +63,7 @@ const AuthenticatedLayout: FC<{}> = ({ children }) => {
                     <main className="relative z-0 flex-1 overflow-y-auto focus:outline-none">
                         <div className="py-6">
                             <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                                <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
+                                <h1 className="text-2xl font-semibold">Home</h1>
                             </div>
                             <div className="px-4 mx-auto max-w-7xl sm:px-6 md:px-8">{children}</div>
                         </div>
