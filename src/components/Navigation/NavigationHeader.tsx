@@ -7,14 +7,14 @@ import { Avatar } from "components";
 import { useUser } from "context";
 import { songstagramApi } from "lib";
 
-interface IProfileHeaderProps {
+interface INavigationHeaderProps {
     /**
      * Classes to be applied to the parent element
      */
     className?: string | ClassNames;
 }
 
-const ProfileHeader: FC<IProfileHeaderProps> = ({ className = "" }) => {
+const NavigationHeader: FC<INavigationHeaderProps> = ({ className = "" }) => {
     const router = useRouter();
     const { setAccessToken, setUser, user } = useUser();
     const wrapperClasses = new ClassNames("dark:text-white").add(className);
@@ -51,5 +51,5 @@ const ProfileHeader: FC<IProfileHeaderProps> = ({ className = "" }) => {
     );
 };
 
-export default ProfileHeader;
-export { ProfileHeader };
+export default NavigationHeader;
+export { NavigationHeader };

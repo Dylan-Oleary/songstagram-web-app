@@ -3,7 +3,8 @@ import Link from "next/link";
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import { ClassNames } from "@44north/classnames";
-import ProfileHeader from "components/ProfileHeader";
+
+import { NavigationHeader } from "components";
 
 interface IMobileNavigationProps {
     /**
@@ -75,7 +76,7 @@ const MobileNavigation: FC<IMobileNavigationProps> = ({
                             </div>
                         </Transition.Child>
                         <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
-                            <ProfileHeader />
+                            <NavigationHeader />
                             <nav className="px-2 mt-5 space-y-1">
                                 {navigation.map((item) => (
                                     <Link href={item.href} key={item.name}>

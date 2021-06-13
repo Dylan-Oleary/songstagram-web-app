@@ -2,7 +2,7 @@ import { FC } from "react";
 import Link from "next/link";
 import { ClassNames } from "@44north/classnames";
 
-import { ProfileHeader } from "components";
+import { NavigationHeader } from "components";
 
 interface IDesktopNavigationProps {
     /**
@@ -17,7 +17,7 @@ const DesktopNavigation: FC<IDesktopNavigationProps> = ({ navigation = [] }) => 
             <div className="flex flex-col w-96">
                 <div className="flex flex-col flex-1 h-0 bg-white dark:bg-dark">
                     <div className="flex flex-col flex-1 pt-5 pb-4 overflow-y-auto">
-                        <ProfileHeader className="px-2" />
+                        <NavigationHeader className="px-2" />
                         <nav className="flex-1 px-2 mt-5 space-y-1 bg-white dark:bg-dark">
                             {navigation.map((item) => (
                                 <Link key={item.name} href={item.href}>
