@@ -18,6 +18,7 @@ const NavigationHeader: FC<INavigationHeaderProps> = ({ className = "" }) => {
     const router = useRouter();
     const { setAccessToken, setUser, user } = useUser();
     const wrapperClasses = new ClassNames("dark:text-white").add(className);
+    const linkClasses = new ClassNames("transition duration-250 hover:text-primary-3");
 
     const logout = async () => {
         await songstagramApi("/logout", "POST").catch((error) => {
@@ -37,12 +38,16 @@ const NavigationHeader: FC<INavigationHeaderProps> = ({ className = "" }) => {
                 <div className="flex items-center space-x-4 lg:space-x-6">
                     <Avatar alt={`User avatar for ${user?.username}`} src={user?.profilePicture} />
                     <div>
-                        <h2 className="text-4xl">{user.username}</h2>
+                        <Link href={`/profile/${user?.username}`}>
+                            <a className={`text-4xl ${linkClasses.list()}`}>{user.username}</a>
+                        </Link>
                         <div className="flex space-x-2">
-                            <Link href="/profile">
-                                <a>Edit Profile</a>
+                            <Link href="/settings">
+                                <a className={linkClasses.list()}>Edit Profile</a>
                             </Link>
-                            <button onClick={logout}>Logout</button>
+                            <button className={linkClasses.list()} onClick={logout}>
+                                Logout
+                            </button>
                         </div>
                     </div>
                 </div>
