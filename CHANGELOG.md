@@ -1,6 +1,9 @@
 # Changelog
 
 ## 0.4.0
+- Add basic authenticated layout
+- Add Avatar & Navigation group components
+- Implement basic login page
 
 ## 0.3.0
 - Add Alert & Button components
