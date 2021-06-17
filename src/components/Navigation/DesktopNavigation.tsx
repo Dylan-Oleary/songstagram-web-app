@@ -6,12 +6,16 @@ import { NavigationHeader } from "components";
 
 interface IDesktopNavigationProps {
     /**
+     * The current router path
+     */
+    currentPath: string;
+    /**
      * The navigation items to display in the component
      */
     navigation: NavigationItem[];
 }
 
-const DesktopNavigation: FC<IDesktopNavigationProps> = ({ navigation = [] }) => {
+const DesktopNavigation: FC<IDesktopNavigationProps> = ({ currentPath, navigation = [] }) => {
     return (
         <div className="hidden md:flex md:flex-shrink-0">
             <div className="flex flex-col w-96">
@@ -23,7 +27,7 @@ const DesktopNavigation: FC<IDesktopNavigationProps> = ({ navigation = [] }) => 
                                 <Link key={item.name} href={item.href}>
                                     <a
                                         className={new ClassNames(
-                                            item.current
+                                            currentPath === item.href
                                                 ? "bg-gray-3 text-white"
                                                 : "dark:text-white hover:bg-gray-700 hover:text-white",
                                             "group flex items-center px-2 py-2 text-sm font-medium rounded-md"
@@ -31,7 +35,7 @@ const DesktopNavigation: FC<IDesktopNavigationProps> = ({ navigation = [] }) => 
                                     >
                                         <item.icon
                                             className={new ClassNames(
-                                                item.current
+                                                currentPath === item.href
                                                     ? "text-gray-300"
                                                     : "text-gray-400 group-hover:text-gray-300",
                                                 "mr-3 flex-shrink-0 h-6 w-6"

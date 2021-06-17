@@ -8,6 +8,10 @@ import { NavigationHeader } from "components";
 
 interface IMobileNavigationProps {
     /**
+     * The current router path
+     */
+    currentPath: string;
+    /**
      * Is the navigation currently open?
      */
     isOpen: boolean;
@@ -22,6 +26,7 @@ interface IMobileNavigationProps {
 }
 
 const MobileNavigation: FC<IMobileNavigationProps> = ({
+    currentPath,
     isOpen = false,
     navigation = [],
     setIsOpen
@@ -82,7 +87,7 @@ const MobileNavigation: FC<IMobileNavigationProps> = ({
                                     <Link href={item.href} key={item.name}>
                                         <a
                                             className={new ClassNames(
-                                                item.current
+                                                currentPath === item.href
                                                     ? "bg-gray-3 text-white"
                                                     : "dark:text-white  hover:bg-gray-700 hover:text-white",
                                                 "group flex items-center px-2 py-2 text-base font-medium rounded-md"
@@ -90,7 +95,7 @@ const MobileNavigation: FC<IMobileNavigationProps> = ({
                                         >
                                             <item.icon
                                                 className={new ClassNames(
-                                                    item.current
+                                                    currentPath === item.href
                                                         ? "text-gray-300"
                                                         : "text-gray-400 group-hover:text-gray-300",
                                                     "mr-4 flex-shrink-0 h-6 w-6"
