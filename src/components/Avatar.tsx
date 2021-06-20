@@ -9,6 +9,10 @@ interface IAvatarProps {
      */
     alt?: string;
     /**
+     * Class names to be applied to the avatar
+     */
+    className?: string | ClassNames;
+    /**
      * The size of the avatar
      */
     size?: "sm" | "md" | "lg" | "xl";
@@ -18,9 +22,9 @@ interface IAvatarProps {
     src?: string;
 }
 
-const Avatar: FC<IAvatarProps> = ({ alt = "Avatar", size = "md", src }) => {
+const Avatar: FC<IAvatarProps> = ({ alt = "Avatar", className = "", size = "md", src }) => {
     const [showDefault, setShowDefault] = useState<boolean>(src ? false : true);
-    const avatarClasses = new ClassNames("rounded-full");
+    const avatarClasses = new ClassNames("rounded-full").add(className);
 
     switch (size) {
         case "sm":

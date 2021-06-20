@@ -46,3 +46,37 @@ declare type NavigationItem = {
     href: string;
     icon?: (props: SVGProps<SVGSVGElement>) => JSX.Element;
 };
+declare interface IAlbum {
+    id: string;
+    name: string;
+    artists: IArtist[];
+    images: ISpotifyImage[];
+}
+declare interface IArtist {
+    id: string;
+    name: string;
+    albums: IAlbum[];
+    images: ISpotifyImage[];
+}
+declare interface ITrack {
+    id: string;
+    name: string;
+    duration_ms: number;
+    explicit: boolean;
+    artists: IArtist[];
+    album: IAlbum;
+}
+declare interface ISpotifyImage {
+    height: number;
+    width: number;
+    url: string;
+}
+declare type SpotifySearchResults = {
+    albums: IAlbum[];
+    artists: IArtist[];
+    tracks: ITrack[];
+    total: number;
+}
+declare interface ISearchResults {
+    spotifySearch: SpotifySearchResults;
+}

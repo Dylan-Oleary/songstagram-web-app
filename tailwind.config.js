@@ -83,7 +83,7 @@ module.exports = {
                 "sf-pro-display": "SF Pro Display"
             },
             fontSize: {
-                "2xs": "6.5625rem",
+                "2xs": "0.5625rem",
                 xs: "0.75rem",
                 sm: "0.875rem",
                 base: "1rem",
