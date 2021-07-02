@@ -4,6 +4,7 @@ import prettyMS from "pretty-ms";
 import { ClassNames } from "@44north/classnames";
 
 import { Avatar } from "components";
+import { useExplore } from "context";
 
 interface ISearchResultCardProps {
     /**
@@ -21,6 +22,7 @@ interface ISearchResultCardProps {
 }
 
 const SearchResultCard: FC<ISearchResultCardProps> = ({ className = "", data, type = "track" }) => {
+    const { pushToHistory } = useExplore();
     const wrapperClasses = new ClassNames(
         "inline-block space-y-4 rounded-md dark:bg-gray-2 p-4 transition-colors duration-250 dark:hover:bg-gray-3 hover:bg-gray-6 cursor-pointer shadow-lg bg-white"
     )
@@ -103,7 +105,19 @@ const SearchResultCard: FC<ISearchResultCardProps> = ({ className = "", data, ty
             break;
     }
 
-    return <div className={wrapperClasses.list()}>{content}</div>;
+    return (
+        <div
+            className={wrapperClasses.list()}
+            onClick={() =>
+                pushToHistory({
+                    componentKey: type,
+                    value: data.id
+                })
+            }
+        >
+            {content}
+        </div>
+    );
 };
 
 export default SearchResultCard;

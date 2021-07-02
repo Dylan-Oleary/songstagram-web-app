@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-import { SearchBlock } from "components";
+import { ArtistBlock, SearchBlock } from "components";
 import { useExplore } from "context";
 
 const ExplorePortal: FC<{}> = ({}) => {
@@ -8,6 +8,9 @@ const ExplorePortal: FC<{}> = ({}) => {
     let componentToRender: JSX.Element;
 
     switch (activeComponent.componentKey) {
+        case "artist":
+            componentToRender = <ArtistBlock id={activeComponent.value} />;
+            break;
         case "search":
             componentToRender = <SearchBlock initialSearchTerm={activeComponent.value} />;
             break;

@@ -80,3 +80,26 @@ declare type SpotifySearchResults = {
 declare interface ISearchResults {
     spotifySearch: SpotifySearchResults;
 }
+
+declare interface IArtistBlockQueryResult {
+    artist: {
+        id: string;
+        name: string;
+        genres: string[];
+        href: string;
+        images: ISpotifyImage[];
+        popularity: number;
+        related_artists: IArtist[];
+        top_tracks: ITrack[];
+        uri: string;
+        albums: {
+            items: IAlbum[];
+        }
+        external_urls: {
+            spotify: string;
+        }
+        followers: {
+            total: number;
+        }
+    }
+}

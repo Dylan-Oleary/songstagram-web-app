@@ -1,4 +1,5 @@
 export * from "./Alert";
+export * from "./Artist";
 export * from "./Avatar";
 export * from "./Button";
 export * from "./ExplorePortal";
