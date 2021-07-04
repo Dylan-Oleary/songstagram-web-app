@@ -40,7 +40,7 @@ const SearchResultCard: FC<ISearchResultCardProps> = ({ className = "", data, ty
                         alt={`Photo of ${type} ${data.name}`}
                         className="mx-auto"
                         size="xl"
-                        src={(data as IArtist).images[0]?.url}
+                        src={(data as IArtist)?.images[0]?.url}
                     />
                     <div>
                         <div className={primaryTitleClasses.list()}>{data?.name}</div>
@@ -56,13 +56,13 @@ const SearchResultCard: FC<ISearchResultCardProps> = ({ className = "", data, ty
                         <Image
                             alt={`Photo of ${type} ${data.name}`}
                             layout="fill"
-                            src={(data as IAlbum).images[0]?.url}
+                            src={(data as IAlbum)?.images[0]?.url}
                         />
                     </div>
                     <div>
                         <div className={primaryTitleClasses.list()}>{data?.name}</div>
                         <div className={secondaryTitleClasses.list()}>
-                            {(data as IAlbum).artists[0]?.name}
+                            {(data as IAlbum)?.artists[0]?.name}
                         </div>
                     </div>
                 </>
@@ -77,14 +77,14 @@ const SearchResultCard: FC<ISearchResultCardProps> = ({ className = "", data, ty
                                 <Image
                                     alt={`Photo of ${type} ${data.name}`}
                                     layout="fill"
-                                    src={(data as ITrack).album?.images[0]?.url}
+                                    src={(data as ITrack)?.album?.images[0]?.url}
                                 />
                             )}
                         </div>
                         <div className="flex flex-col flex-grow">
                             <div className={primaryTitleClasses.list()}>{data?.name}</div>
                             <div className={secondaryTitleClasses.list()}>
-                                {(data as IAlbum).artists[0]?.name}
+                                {(data as IAlbum)?.artists[0]?.name}
                             </div>
                             {(data as ITrack)?.explicit && (
                                 <div className="w-16 mt-2 text-center uppercase text-2xs rounded-6xl bg-gray-6 dark:bg-gray-4">

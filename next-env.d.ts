@@ -46,11 +46,13 @@ declare type NavigationItem = {
     href: string;
     icon?: (props: SVGProps<SVGSVGElement>) => JSX.Element;
 };
+declare type AlbumType = "album" | "compilation" | "single";
 declare interface IAlbum {
     id: string;
     name: string;
     artists: IArtist[];
     images: ISpotifyImage[];
+    album_type: AlbumType;
 }
 declare interface IArtist {
     id: string;

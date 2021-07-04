@@ -15,7 +15,7 @@ interface IAvatarProps {
     /**
      * The size of the avatar
      */
-    size?: "sm" | "md" | "lg" | "xl";
+    size?: "sm" | "md" | "lg" | "xl" | "2xl" | "4xl";
     /**
      * The img source used for the avatar
      */
@@ -38,6 +38,12 @@ const Avatar: FC<IAvatarProps> = ({ alt = "Avatar", className = "", size = "md",
             break;
         case "xl":
             avatarClasses.add("w-32 h-32 sm:h-36 sm:w-36");
+            break;
+        case "2xl":
+            avatarClasses.add("w-40 h-40 sm:h-44 sm:w-44");
+            break;
+        case "4xl":
+            avatarClasses.add("w-56 h-56 sm:h-60 sm:w-60");
             break;
         default:
             avatarClasses.add("w-8 h-8 sm:h-12 sm:w-12");
