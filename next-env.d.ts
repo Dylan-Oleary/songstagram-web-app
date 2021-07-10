@@ -105,3 +105,9 @@ declare interface IArtistBlockQueryResult {
         }
     }
 }
+
+declare interface IFilteredMusicalReleases {
+    albums: IAlbum[];
+    compilations: IAlbum[];
+    singles: IAlbum[];
+}

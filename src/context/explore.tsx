@@ -1,6 +1,6 @@
 import { createContext, FC, useContext, useState } from "react";
 
-type ExploreComponentControlKey = "album" | "artist" | "search" | "track";
+type ExploreComponentControlKey = "album" | "artist" | "discography" | "search" | "track";
 
 type ExploreComponentControl = {
     /**
@@ -8,9 +8,9 @@ type ExploreComponentControl = {
      */
     componentKey: ExploreComponentControlKey;
     /**
-     * The value that drives the data fetching of the rendered component
+     * The value that drives the data fetching / initial render of the component
      */
-    value: string;
+    value: any;
 };
 
 interface IExploreContext {

@@ -8,6 +8,10 @@ import { useExplore } from "context";
 
 interface ISearchResultCardProps {
     /**
+     * Overrides the data passed in for artist
+     */
+    artist?: IArtist;
+    /**
      * Classes to be applied to the wrapping element
      */
     className?: string | ClassNames;
@@ -21,7 +25,12 @@ interface ISearchResultCardProps {
     type?: "artist" | "album" | "track";
 }
 
-const SearchResultCard: FC<ISearchResultCardProps> = ({ className = "", data, type = "track" }) => {
+const SearchResultCard: FC<ISearchResultCardProps> = ({
+    artist,
+    className = "",
+    data,
+    type = "track"
+}) => {
     const { pushToHistory } = useExplore();
     const wrapperClasses = new ClassNames(
         "inline-block space-y-4 rounded-md dark:bg-gray-2 p-4 transition-colors duration-250 dark:hover:bg-gray-3 hover:bg-gray-6 cursor-pointer shadow-lg bg-white"
@@ -37,13 +46,15 @@ const SearchResultCard: FC<ISearchResultCardProps> = ({ className = "", data, ty
             content = (
                 <>
                     <Avatar
-                        alt={`Photo of ${type} ${data.name}`}
+                        alt={`Photo of ${type} ${artist?.name || data.name}`}
                         className="mx-auto"
                         size="xl"
                         src={(data as IArtist)?.images[0]?.url}
                     />
                     <div>
-                        <div className={primaryTitleClasses.list()}>{data?.name}</div>
+                        <div className={primaryTitleClasses.list()}>
+                            {artist?.name || data?.name}
+                        </div>
                         <div className={secondaryTitleClasses.list()}>Artist</div>
                     </div>
                 </>
@@ -62,7 +73,7 @@ const SearchResultCard: FC<ISearchResultCardProps> = ({ className = "", data, ty
                     <div>
                         <div className={primaryTitleClasses.list()}>{data?.name}</div>
                         <div className={secondaryTitleClasses.list()}>
-                            {(data as IAlbum)?.artists[0]?.name}
+                            {artist?.name || (data as IAlbum)?.artists[0]?.name}
                         </div>
                     </div>
                 </>
@@ -84,7 +95,7 @@ const SearchResultCard: FC<ISearchResultCardProps> = ({ className = "", data, ty
                         <div className="flex flex-col flex-grow">
                             <div className={primaryTitleClasses.list()}>{data?.name}</div>
                             <div className={secondaryTitleClasses.list()}>
-                                {(data as IAlbum)?.artists[0]?.name}
+                                {artist?.name || (data as IAlbum)?.artists[0]?.name}
                             </div>
                             {(data as ITrack)?.explicit && (
                                 <div className="w-16 mt-2 text-center uppercase text-2xs rounded-6xl bg-gray-6 dark:bg-gray-4">

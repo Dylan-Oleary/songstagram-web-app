@@ -3,7 +3,7 @@ import { ClassNames } from "@44north/classnames";
 import { gql, useQuery } from "@apollo/client";
 
 import { Avatar, SearchResultCard } from "components";
-import { useUser } from "context";
+import { useExplore, useUser } from "context";
 
 interface IArtistBlockProps {
     /**
@@ -19,13 +19,24 @@ const ArtistBlock: FC<IArtistBlockProps> = ({ id }) => {
         "grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6"
     );
     const seeMoreClasses = new ClassNames("text-sm font-light uppercase text-gray-5");
+    const { pushToHistory } = useExplore();
     const { accessToken } = useUser();
     const { data, loading, error } = useQuery<IArtistBlockQueryResult>(GET_ARTIST, {
         context: { headers: { authorization: accessToken } },
         variables: { id }
     });
 
-    const filteredMusicalReleases = useMemo(() => {
+    const openDiscography: (initialFilter: AlbumType) => void = (initialFilter) => {
+        pushToHistory({
+            componentKey: "discography",
+            value: {
+                id,
+                initialFilter
+            }
+        });
+    };
+
+    const filteredMusicalReleases = useMemo<IFilteredMusicalReleases>(() => {
         if ((data?.artist?.albums?.items || []).length === 0) return null;
 
         return {
@@ -64,6 +75,12 @@ const ArtistBlock: FC<IArtistBlockProps> = ({ id }) => {
                                 {data.artist.top_tracks.slice(0, 5).map((track) => (
                                     <SearchResultCard
                                         key={`track-card-${track.id}`}
+                                        artist={
+                                            {
+                                                id: data?.artist?.id,
+                                                name: data?.artist?.name
+                                            } as IArtist
+                                        }
                                         data={track}
                                         type="track"
                                     />
@@ -82,6 +99,12 @@ const ArtistBlock: FC<IArtistBlockProps> = ({ id }) => {
                                 {filteredMusicalReleases?.albums.slice(0, 6).map((album) => (
                                     <SearchResultCard
                                         key={`album-card-${album.id}`}
+                                        artist={
+                                            {
+                                                id: data?.artist?.id,
+                                                name: data?.artist?.name
+                                            } as IArtist
+                                        }
                                         data={album}
                                         type="album"
                                     />
@@ -99,6 +122,12 @@ const ArtistBlock: FC<IArtistBlockProps> = ({ id }) => {
                                 {filteredMusicalReleases?.singles.slice(0, 6).map((album) => (
                                     <SearchResultCard
                                         key={`single-card-${album.id}`}
+                                        artist={
+                                            {
+                                                id: data?.artist?.id,
+                                                name: data?.artist?.name
+                                            } as IArtist
+                                        }
                                         data={album}
                                         type="album"
                                     />
@@ -110,12 +139,23 @@ const ArtistBlock: FC<IArtistBlockProps> = ({ id }) => {
                         <div>
                             <div className="flex items-center justify-between mb-4">
                                 <h3 className={h3Classes.list()}>Compilations</h3>
-                                <span className={seeMoreClasses.list()}>See Discography</span>
+                                <span
+                                    className={seeMoreClasses.list()}
+                                    onClick={() => openDiscography("compilation")}
+                                >
+                                    See Discography
+                                </span>
                             </div>
                             <div className={sectionGridClasses.list()}>
                                 {filteredMusicalReleases?.compilations.slice(0, 6).map((album) => (
                                     <SearchResultCard
                                         key={`compilation-card-${album.id}`}
+                                        artist={
+                                            {
+                                                id: data?.artist?.id,
+                                                name: data?.artist?.name
+                                            } as IArtist
+                                        }
                                         data={album}
                                         type="album"
                                     />
@@ -166,10 +206,6 @@ const GET_ARTIST = gql`
                         url
                     }
                 }
-                artists {
-                    id
-                    name
-                }
             }
             images {
                 url
@@ -190,10 +226,6 @@ const GET_ARTIST = gql`
                         id
                         name
                         album_type
-                        artists {
-                            id
-                            name
-                        }
                         images {
                             url
                         }
