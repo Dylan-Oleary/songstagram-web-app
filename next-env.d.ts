@@ -111,3 +111,8 @@ declare interface IFilteredMusicalReleases {
     compilations: IAlbum[];
     singles: IAlbum[];
 }
+
+declare type SelectInputOption = {
+    label: string;
+    value: string;
+}

@@ -18,7 +18,9 @@ const ArtistBlock: FC<IArtistBlockProps> = ({ id }) => {
     const sectionGridClasses = new ClassNames(
         "grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6"
     );
-    const seeMoreClasses = new ClassNames("text-sm font-light uppercase text-gray-5");
+    const seeMoreClasses = new ClassNames(
+        "text-sm font-light uppercase text-gray-5 cursor-pointer hover:underline"
+    );
     const { pushToHistory } = useExplore();
     const { accessToken } = useUser();
     const { data, loading, error } = useQuery<IArtistBlockQueryResult>(GET_ARTIST, {
@@ -93,7 +95,12 @@ const ArtistBlock: FC<IArtistBlockProps> = ({ id }) => {
                         <div>
                             <div className="flex items-center justify-between mb-4">
                                 <h3 className={h3Classes.list()}>Albums</h3>
-                                <span className={seeMoreClasses.list()}>See Discography</span>
+                                <span
+                                    className={seeMoreClasses.list()}
+                                    onClick={() => openDiscography("album")}
+                                >
+                                    See Discography
+                                </span>
                             </div>
                             <div className={sectionGridClasses.list()}>
                                 {filteredMusicalReleases?.albums.slice(0, 6).map((album) => (
@@ -116,7 +123,12 @@ const ArtistBlock: FC<IArtistBlockProps> = ({ id }) => {
                         <div>
                             <div className="flex items-center justify-between mb-4">
                                 <h3 className={h3Classes.list()}>Singles and EPs</h3>
-                                <span className={seeMoreClasses.list()}>See Discography</span>
+                                <span
+                                    className={seeMoreClasses.list()}
+                                    onClick={() => openDiscography("single")}
+                                >
+                                    See Discography
+                                </span>
                             </div>
                             <div className={sectionGridClasses.list()}>
                                 {filteredMusicalReleases?.singles.slice(0, 6).map((album) => (
