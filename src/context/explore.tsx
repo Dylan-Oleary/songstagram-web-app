@@ -65,15 +65,36 @@ const ExploreProvider: FC<{}> = ({ children }) => {
      */
     const pushToHistory: (entry: ExploreComponentControl) => void = (entry) => {
         const updatedHistory = [...history];
+        const lastEntry = updatedHistory[updatedHistory.length - 1];
         const newEntry: IndexedExploreComponentControl = {
             ...entry,
             index: updatedHistory.length
         };
 
-        updatedHistory.push(newEntry);
+        if (
+            typeof newEntry.value === "object" &&
+            newEntry.componentKey === lastEntry.componentKey
+        ) {
+            let isSameEntry = true;
 
-        setHistory(updatedHistory);
-        setActiveComponent(newEntry);
+            for (const key of Object.keys(newEntry.value).filter((key) => key !== "index")) {
+                if (newEntry.value[key] !== lastEntry.value[key]) isSameEntry = false;
+            }
+
+            if (isSameEntry) {
+                setActiveComponent(lastEntry);
+            } else {
+                updatedHistory.push(newEntry);
+
+                setHistory(updatedHistory);
+                setActiveComponent(newEntry);
+            }
+        } else {
+            updatedHistory.push(newEntry);
+
+            setHistory(updatedHistory);
+            setActiveComponent(newEntry);
+        }
     };
 
     /**
