@@ -13,6 +13,13 @@ type ExploreComponentControl = {
     value: any;
 };
 
+type IndexedExploreComponentControl = ExploreComponentControl & {
+    /**
+     * The index of the item in the explore history
+     */
+    index: number;
+};
+
 interface IExploreContext {
     /**
      * The active component being rendered in the explore portal
@@ -23,6 +30,14 @@ interface IExploreContext {
      */
     history: ExploreComponentControl[];
     /**
+     * Moves back one entry in the history to render the active component
+     */
+    navigateHistoryBack: () => void;
+    /**
+     * Moves forward one entry in the history to render the active component
+     */
+    navigateHistoryForward: () => void;
+    /**
      * Pushes a new component key/value pair to the history
      */
     pushToHistory: (entry: ExploreComponentControl) => void;
@@ -31,14 +46,16 @@ interface IExploreContext {
 const ExploreContext = createContext<IExploreContext>(undefined);
 
 const ExploreProvider: FC<{}> = ({ children }) => {
-    const [activeComponent, setActiveComponent] = useState<ExploreComponentControl>({
+    const [activeComponent, setActiveComponent] = useState<IndexedExploreComponentControl>({
         componentKey: "search",
-        value: ""
+        value: "",
+        index: 0
     });
-    const [history, setHistory] = useState<ExploreComponentControl[]>([
+    const [history, setHistory] = useState<IndexedExploreComponentControl[]>([
         {
             componentKey: "search",
-            value: ""
+            value: "",
+            index: 0
         }
     ]);
 
@@ -48,15 +65,45 @@ const ExploreProvider: FC<{}> = ({ children }) => {
      */
     const pushToHistory: (entry: ExploreComponentControl) => void = (entry) => {
         const updatedHistory = [...history];
+        const newEntry: IndexedExploreComponentControl = {
+            ...entry,
+            index: updatedHistory.length
+        };
 
-        updatedHistory.push(entry);
+        updatedHistory.push(newEntry);
 
         setHistory(updatedHistory);
-        setActiveComponent(entry);
+        setActiveComponent(newEntry);
+    };
+
+    /**
+     * Moves back one entry in the history to render the active component
+     */
+    const navigateHistoryBack: () => void = () => {
+        if (history.length === 1 || activeComponent.index === 0) return;
+
+        setActiveComponent(history[activeComponent.index - 1]);
+    };
+
+    /**
+     * Moves forward one entry in the history to render the active component
+     */
+    const navigateHistoryForward: () => void = () => {
+        if (history.length === 1 || activeComponent.index === history.length - 1) return;
+
+        setActiveComponent(history[activeComponent.index + 1]);
     };
 
     return (
-        <ExploreContext.Provider value={{ activeComponent, history, pushToHistory }}>
+        <ExploreContext.Provider
+            value={{
+                activeComponent,
+                history,
+                navigateHistoryBack,
+                navigateHistoryForward,
+                pushToHistory
+            }}
+        >
             {children}
         </ExploreContext.Provider>
     );

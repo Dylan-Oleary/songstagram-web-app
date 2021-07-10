@@ -1,10 +1,10 @@
 import { FC } from "react";
 
-import { ArtistBlock, Discography, SearchBlock } from "components";
+import { ArtistBlock, Button, Discography, SearchBlock } from "components";
 import { useExplore } from "context";
 
 const ExplorePortal: FC<{}> = ({}) => {
-    const { activeComponent } = useExplore();
+    const { activeComponent, navigateHistoryBack, navigateHistoryForward } = useExplore();
     let componentToRender: JSX.Element;
 
     switch (activeComponent.componentKey) {
@@ -27,7 +27,15 @@ const ExplorePortal: FC<{}> = ({}) => {
             break;
     }
 
-    return <div className="flex flex-col items-center h-full space-y-4">{componentToRender}</div>;
+    return (
+        <div className="flex flex-col items-center h-full space-y-4">
+            <div className="flex space-x-2">
+                <Button onClick={navigateHistoryBack}>Back</Button>
+                <Button onClick={navigateHistoryForward}>Forward</Button>
+            </div>
+            {componentToRender}
+        </div>
+    );
 };
 
 export default ExplorePortal;
