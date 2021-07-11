@@ -30,11 +30,11 @@ interface IExploreContext {
     /**
      * The active component being rendered in the explore portal
      */
-    activeComponent: ExploreComponentControl;
+    activeComponent: IndexedExploreComponentControl;
     /**
      * An array of component keys and render values that help keep a view history
      */
-    history: ExploreComponentControl[];
+    history: IndexedExploreComponentControl[];
     /**
      * Moves back one entry in the history to render the active component
      */
