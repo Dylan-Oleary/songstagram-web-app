@@ -1,3 +1,3 @@
-export * from "./SearchBlock";
+export * from "./SearchInput";
 export * from "./SearchResultCard";
 export * from "./SearchResults";

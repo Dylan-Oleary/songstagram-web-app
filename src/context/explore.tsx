@@ -1,11 +1,11 @@
-import { createContext, FC, useContext, useState } from "react";
+import { createContext, Dispatch, FC, SetStateAction, useContext, useState } from "react";
 
 type ExploreComponentControlKey =
     | "album"
     | "artist"
     | "discography"
+    | "home"
     | "relatedArtists"
-    | "search"
     | "track";
 
 type ExploreComponentControl = {
@@ -36,6 +36,10 @@ interface IExploreContext {
      */
     history: IndexedExploreComponentControl[];
     /**
+     * Is the search functionality currently active?
+     */
+    isSearchActive?: boolean;
+    /**
      * Moves back one entry in the history to render the active component
      */
     navigateHistoryBack: () => void;
@@ -47,23 +51,28 @@ interface IExploreContext {
      * Pushes a new component key/value pair to the history
      */
     pushToHistory: (entry: ExploreComponentControl) => void;
+    /**
+     * Sets whether or not the search is active
+     */
+    setIsSearchActive: Dispatch<SetStateAction<boolean>>;
 }
 
 const ExploreContext = createContext<IExploreContext>(undefined);
 
 const ExploreProvider: FC<{}> = ({ children }) => {
     const [activeComponent, setActiveComponent] = useState<IndexedExploreComponentControl>({
-        componentKey: "search",
+        componentKey: "home",
         value: "",
         index: 0
     });
     const [history, setHistory] = useState<IndexedExploreComponentControl[]>([
         {
-            componentKey: "search",
+            componentKey: "home",
             value: "",
             index: 0
         }
     ]);
+    const [isSearchActive, setIsSearchActive] = useState<boolean>(false);
 
     /**
      * Pushes a new component key/value pair to the history and sets the active component to the passed entry
@@ -107,6 +116,7 @@ const ExploreProvider: FC<{}> = ({ children }) => {
      * Moves back one entry in the history to render the active component
      */
     const navigateHistoryBack: () => void = () => {
+        if (isSearchActive) return setIsSearchActive(false);
         if (history.length === 1 || activeComponent.index === 0) return;
 
         setActiveComponent(history[activeComponent.index - 1]);
@@ -126,9 +136,11 @@ const ExploreProvider: FC<{}> = ({ children }) => {
             value={{
                 activeComponent,
                 history,
+                isSearchActive,
                 navigateHistoryBack,
                 navigateHistoryForward,
-                pushToHistory
+                pushToHistory,
+                setIsSearchActive
             }}
         >
             {children}
