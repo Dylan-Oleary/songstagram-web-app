@@ -1,6 +1,12 @@
 import { createContext, FC, useContext, useState } from "react";
 
-type ExploreComponentControlKey = "album" | "artist" | "discography" | "search" | "track";
+type ExploreComponentControlKey =
+    | "album"
+    | "artist"
+    | "discography"
+    | "relatedArtists"
+    | "search"
+    | "track";
 
 type ExploreComponentControl = {
     /**

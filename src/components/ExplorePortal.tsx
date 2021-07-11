@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-import { ArtistBlock, Button, Discography, SearchBlock } from "components";
+import { ArtistBlock, Button, Discography, RelatedArtists, SearchBlock } from "components";
 import { useExplore } from "context";
 
 const ExplorePortal: FC<{}> = ({}) => {
@@ -18,6 +18,9 @@ const ExplorePortal: FC<{}> = ({}) => {
                     initialFilter={activeComponent?.value?.initialFilter}
                 />
             );
+            break;
+        case "relatedArtists":
+            componentToRender = <RelatedArtists id={activeComponent.value} />;
             break;
         case "search":
             componentToRender = <SearchBlock initialSearchTerm={activeComponent.value} />;

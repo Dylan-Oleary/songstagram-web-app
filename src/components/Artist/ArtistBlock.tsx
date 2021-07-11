@@ -38,6 +38,13 @@ const ArtistBlock: FC<IArtistBlockProps> = ({ id }) => {
         });
     };
 
+    const openRelatedArtists: () => void = () => {
+        pushToHistory({
+            componentKey: "relatedArtists",
+            value: id
+        });
+    };
+
     const filteredMusicalReleases = useMemo<IFilteredMusicalReleases>(() => {
         if ((data?.artist?.albums?.items || []).length === 0) return null;
 
@@ -180,7 +187,10 @@ const ArtistBlock: FC<IArtistBlockProps> = ({ id }) => {
                         <div>
                             <div className="flex items-center justify-between mb-4">
                                 <h3 className={h3Classes.list()}>Related Artists</h3>
-                                <span className={seeMoreClasses.list()}>
+                                <span
+                                    className={seeMoreClasses.list()}
+                                    onClick={openRelatedArtists}
+                                >
                                     See More Related Artists
                                 </span>
                             </div>
