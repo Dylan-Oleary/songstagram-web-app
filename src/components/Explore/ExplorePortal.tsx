@@ -13,6 +13,7 @@ import {
     SearchResults
 } from "components";
 import { useExplore, useUser } from "context";
+import { useDebounce } from "hooks";
 
 const ExplorePortal: FC<{}> = ({}) => {
     const { accessToken } = useUser();
@@ -25,6 +26,7 @@ const ExplorePortal: FC<{}> = ({}) => {
         setIsSearchActive
     } = useExplore();
     const [searchTerm, setSearchTerm] = useState<string>("");
+    const debouncedSearchTerm = useDebounce(searchTerm, 250);
     const [fetchSearchResults, { data: searchData, loading }] =
         useLazyQuery<ISearchResults>(GET_SEARCH_RESULTS);
     const buttonClasses = new ClassNames(
@@ -35,7 +37,7 @@ const ExplorePortal: FC<{}> = ({}) => {
         setIsSearchActive(true);
         fetchSearchResults({
             context: { headers: { authorization: accessToken } },
-            variables: { searchTerm }
+            variables: { searchTerm: debouncedSearchTerm }
         });
     };
 
@@ -44,8 +46,12 @@ const ExplorePortal: FC<{}> = ({}) => {
     }, [activeComponent]);
 
     useEffect(() => {
-        if (isSearchActive && searchTerm.trim().length === 0) setIsSearchActive(false);
-    }, [searchTerm]);
+        if (isSearchActive && debouncedSearchTerm.trim().length === 0) {
+            setIsSearchActive(false);
+        } else if (debouncedSearchTerm.trim().length > 0) {
+            performSearch();
+        }
+    }, [debouncedSearchTerm]);
 
     let componentToRender: JSX.Element;
 
@@ -97,9 +103,6 @@ const ExplorePortal: FC<{}> = ({}) => {
                     <ChevronRightIcon className="w-6 h-6 mx-auto" />
                 </Button>
                 <SearchInput onChange={(value) => setSearchTerm(value)} value={searchTerm} />
-                <Button type="submit" onClick={performSearch}>
-                    Search
-                </Button>
             </div>
             {/* Search Results */}
             {isSearchActive && searchData && <SearchResults data={searchData} loading={loading} />}
