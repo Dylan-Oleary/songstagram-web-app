@@ -1,3 +1,4 @@
+export * from "./Album";
 export * from "./Alert";
 export * from "./Artist";
 export * from "./Avatar";

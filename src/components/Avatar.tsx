@@ -13,20 +13,33 @@ interface IAvatarProps {
      */
     className?: string | ClassNames;
     /**
+     * Adds rounding to the avatar
+     */
+    rounded?: boolean;
+    /**
      * The size of the avatar
      */
-    size?: "sm" | "md" | "lg" | "xl" | "2xl" | "4xl";
+    size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "4xl";
     /**
      * The img source used for the avatar
      */
     src?: string;
 }
 
-const Avatar: FC<IAvatarProps> = ({ alt = "Avatar", className = "", size = "md", src }) => {
+const Avatar: FC<IAvatarProps> = ({
+    alt = "Avatar",
+    className = "",
+    rounded = true,
+    size = "md",
+    src
+}) => {
     const [showDefault, setShowDefault] = useState<boolean>(src ? false : true);
-    const avatarClasses = new ClassNames("rounded-full").add(className);
+    const avatarClasses = new ClassNames(rounded ? "rounded-full" : "").add(className);
 
     switch (size) {
+        case "xs":
+            avatarClasses.add("w-4 h-4 sm:h-8 sm:w-8");
+            break;
         case "sm":
             avatarClasses.add("w-8 h-8 sm:h-12 sm:w-12");
             break;

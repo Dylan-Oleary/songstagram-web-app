@@ -4,6 +4,7 @@ import { gql, useLazyQuery } from "@apollo/client";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/outline";
 
 import {
+    AlbumBlock,
     ArtistBlock,
     Button,
     Discography,
@@ -56,6 +57,9 @@ const ExplorePortal: FC<{}> = ({}) => {
     let componentToRender: JSX.Element;
 
     switch (activeComponent.componentKey) {
+        case "album":
+            componentToRender = <AlbumBlock id={activeComponent.value} />;
+            break;
         case "artist":
             componentToRender = <ArtistBlock id={activeComponent.value} />;
             break;
@@ -108,7 +112,9 @@ const ExplorePortal: FC<{}> = ({}) => {
             {isSearchActive && searchData && <SearchResults data={searchData} loading={loading} />}
             {/* Active Component */}
             {!isSearchActive && (
-                <div className={isSearchActive ? "hidden" : "relative"}>{componentToRender}</div>
+                <div className={isSearchActive ? "hidden" : "relative w-full"}>
+                    {componentToRender}
+                </div>
             )}
         </div>
     );

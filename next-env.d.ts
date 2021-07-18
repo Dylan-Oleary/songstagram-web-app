@@ -68,6 +68,12 @@ declare interface ITrack {
     artists: IArtist[];
     album: IAlbum;
 }
+
+declare interface ISpotifyCopyright {
+    text: string;
+    type: string;
+}
+
 declare interface ISpotifyImage {
     height: number;
     width: number;
@@ -81,6 +87,24 @@ declare type SpotifySearchResults = {
 }
 declare interface ISearchResults {
     spotifySearch: SpotifySearchResults;
+}
+
+declare interface IAlbumBlockQueryResult {
+    album: {
+        id: string;
+        name: string;
+        label: string;
+        images: ISpotifyImage[];
+        popularity: number;
+        album_type: AlbumType;
+        release_date: string;
+        total_tracks: number;
+        artists: IArtist[];
+        tracks: {
+            items: ITrack[];
+        };
+        copyrights: ISpotifyCopyright[];
+    }
 }
 
 declare interface IArtistBlockQueryResult {
