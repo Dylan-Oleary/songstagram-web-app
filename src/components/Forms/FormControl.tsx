@@ -154,6 +154,17 @@ const FormControl: FC<FormControlProps> = ({
                 />
             );
             break;
+        case "textarea":
+            control = (
+                <TextInput
+                    className={inputClasses}
+                    name={name}
+                    onChange={onChange as (value: string) => void}
+                    type="textarea"
+                    value={value as string}
+                />
+            );
+            break;
         default:
             control = (
                 <TextInput

@@ -19,6 +19,10 @@ interface ITextInputProps {
      */
     placeholder?: string;
     /**
+     * The type of text input
+     */
+    type?: "text" | "textarea";
+    /**
      * The input value
      */
     value: string;
@@ -29,6 +33,7 @@ const TextInput: FC<ITextInputProps> = ({
     name = "",
     onChange = () => {},
     placeholder = " ",
+    type = "text",
     value = ""
 }) => {
     const inputClass = new ClassNames().add(className);
@@ -38,13 +43,25 @@ const TextInput: FC<ITextInputProps> = ({
      *
      * @param event The input change event
      */
-    const handleChange: (event: ChangeEvent<HTMLInputElement>) => void = (event) => {
+    const handleChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void = (
+        event
+    ) => {
         const { target } = event;
 
         onChange(target?.value || "");
     };
 
-    return (
+    return type === "textarea" ? (
+        <textarea
+            autoComplete="off"
+            className={inputClass.list()}
+            id={name}
+            name={name}
+            onChange={handleChange}
+            value={value}
+            placeholder={placeholder}
+        />
+    ) : (
         <input
             autoComplete="off"
             className={inputClass.list()}

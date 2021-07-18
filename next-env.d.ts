@@ -50,9 +50,17 @@ declare type AlbumType = "album" | "compilation" | "single";
 declare interface IAlbum {
     id: string;
     name: string;
-    artists: IArtist[];
+    label: string;
     images: ISpotifyImage[];
+    popularity: number;
     album_type: AlbumType;
+    release_date: string;
+    total_tracks: number;
+    artists: IArtist[];
+    tracks: {
+        items: ITrack[];
+    };
+    copyrights: ISpotifyCopyright[];
 }
 declare interface IArtist {
     id: string;
@@ -90,21 +98,7 @@ declare interface ISearchResults {
 }
 
 declare interface IAlbumBlockQueryResult {
-    album: {
-        id: string;
-        name: string;
-        label: string;
-        images: ISpotifyImage[];
-        popularity: number;
-        album_type: AlbumType;
-        release_date: string;
-        total_tracks: number;
-        artists: IArtist[];
-        tracks: {
-            items: ITrack[];
-        };
-        copyrights: ISpotifyCopyright[];
-    }
+    album: IAlbum;
 }
 
 declare interface IArtistBlockQueryResult {

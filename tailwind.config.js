@@ -34,7 +34,8 @@ module.exports = {
                 "field-error":
                     "inset 0px 1px 2px 0px rgba(0,0,0,0.15), inset 0px -2px 0px 0px rgba(217,53,53,1)",
                 "button-innershadow":
-                    "inset -1px -1px 0px 0px rgba(0,0,0,0.1), inset 1px -1px 0px 0px rgba(0,0,0,0.1)"
+                    "inset -1px -1px 0px 0px rgba(0,0,0,0.1), inset 1px -1px 0px 0px rgba(0,0,0,0.1)",
+                "left-1": "-3px 0px 10px 2px rgba(0,0,0,0.1)"
             },
             colors: {
                 "danger-1": "#730004",
@@ -87,7 +88,7 @@ module.exports = {
                 xs: "0.75rem",
                 sm: "0.875rem",
                 base: "1rem",
-                lg: "10rem",
+                lg: "1.025rem",
                 xl: "1.0625rem",
                 "2xl": "1.125rem",
                 "3xl": "1.1875rem",

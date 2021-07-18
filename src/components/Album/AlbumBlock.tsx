@@ -1,11 +1,12 @@
 import { FC } from "react";
 import { ClassNames } from "@44north/classnames";
 import { gql, useQuery } from "@apollo/client";
+import { PencilAltIcon } from "@heroicons/react/outline";
 import dayjs from "dayjs";
 import prettyMS from "pretty-ms";
 
-import { AlbumTrackList, Avatar } from "components";
-import { useExplore, useUser } from "context";
+import { AlbumTrackList, Avatar, Button, CreatePostForm } from "components";
+import { useExplore, useFlyout, useUser } from "context";
 
 interface IAlbumBlockProps {
     /**
@@ -17,6 +18,7 @@ interface IAlbumBlockProps {
 const AlbumBlock: FC<IAlbumBlockProps> = ({ id }) => {
     const wrapperClasses = new ClassNames("w-full");
     const { pushToHistory } = useExplore();
+    const { openFlyout } = useFlyout();
     const { accessToken } = useUser();
     const { data, loading } = useQuery<IAlbumBlockQueryResult>(GET_ALBUM, {
         context: { headers: { authorization: accessToken } },
@@ -69,11 +71,33 @@ const AlbumBlock: FC<IAlbumBlockProps> = ({ id }) => {
             {loading && <div>Loading...</div>}
             {!loading && data?.album && (
                 <div className="space-y-16">
-                    <div className="flex items-center space-x-8">
-                        <Avatar rounded={false} size="4xl" src={data?.album.images[0]?.url} />
-                        <div>
+                    <div className="flex items-center w-full space-x-8">
+                        <div className="relative min-w-[240px] min-h-[220px]">
+                            <div className="absolute inset-0 z-10 flex items-end justify-end w-full h-full p-1 shadow-lg group backdrop-filter hover:backdrop-blur-sm">
+                                <Button
+                                    borderRadius="circle"
+                                    className="text-transparent transition ease-in-out bg-transparent border-transparent pointer-events-none hover:shadow-lg duration-250 focus:outline-none group-hover:bg-success-3 group-hover:border-success-3 group-hover:text-white group-hover:pointer-events-auto"
+                                    onClick={() =>
+                                        openFlyout(
+                                            <CreatePostForm
+                                                artistName={formatArtistLabel(data.album?.artists)}
+                                                imgSrc={data?.album.images[0]?.url}
+                                                recordName={data.album.name}
+                                            />
+                                        )
+                                    }
+                                    tabIndex={-1}
+                                    size="sm"
+                                    style="none"
+                                >
+                                    <PencilAltIcon className="w-5 h-5" />
+                                </Button>
+                            </div>
+                            <Avatar rounded={false} size="4xl" src={data?.album.images[0]?.url} />
+                        </div>
+                        <div className="overflow-hidden">
                             <div className="uppercase">Album</div>
-                            <h2 className="font-extrabold text-9xl dark:text-white">
+                            <h2 className="font-extrabold truncate text-9xl dark:text-white">
                                 {data.album.name}
                             </h2>
                             <div className="flex items-center space-x-2">

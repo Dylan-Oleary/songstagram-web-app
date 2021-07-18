@@ -47,6 +47,10 @@ type ButtonProps = {
      */
     style?: "primary" | "secondary" | "none";
     /**
+     * The button's tab index
+     */
+    tabIndex?: number;
+    /**
      * The type of button
      */
     type?: "button" | "submit";
@@ -65,6 +69,7 @@ const Button: FC<ButtonProps> = ({
     outline = false,
     size = "md",
     style = "primary",
+    tabIndex = 0,
     type = "button"
 }) => {
     let buttonClasses = new ClassNames(
@@ -212,6 +217,7 @@ const Button: FC<ButtonProps> = ({
             className={buttonClasses.list()}
             disabled={disabled}
             onClick={handleClick}
+            tabIndex={tabIndex}
             type={type}
         >
             <div className={childClasses.list()}>
