@@ -136,7 +136,7 @@ const Form: FC<ICreatePostFormProps> = ({
                     className="flex-grow w-full p-4 text-xl resize-none focus:outline-none dark:text-white dark:bg-dark"
                     name={inputControl?.body?.name}
                     onChange={(value) => onChange(inputControl.body.name, value)}
-                    placeholder="Tell the world what you've been listening to..."
+                    placeholder={`Tell the world why you love ${recordName} by ${artistName}...`}
                     type="textarea"
                     value={formValues.body}
                 />
