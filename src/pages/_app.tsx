@@ -19,7 +19,13 @@ type ExtendedAppProps = AppProps & { serverProps: ServerProps };
 
 function Application({ Component, pageProps, serverProps }: ExtendedAppProps) {
     const client = new ApolloClient({
-        cache: new InMemoryCache(),
+        cache: new InMemoryCache({
+            typePolicies: {
+                Post: {
+                    keyFields: ["postNo"]
+                }
+            }
+        }),
         uri: String(process.env.NEXT_PUBLIC_SONGSTAGRAM_BACKEND_GRAPHQL_URL)
     });
 

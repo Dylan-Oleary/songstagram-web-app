@@ -83,6 +83,10 @@ const AlbumBlock: FC<IAlbumBlockProps> = ({ id }) => {
                                                 artistName={formatArtistLabel(data.album?.artists)}
                                                 imgSrc={data?.album.images[0]?.url}
                                                 recordName={data.album.name}
+                                                spotifyRecordData={{
+                                                    id,
+                                                    recordType: "album"
+                                                }}
                                             />
                                         )
                                     }

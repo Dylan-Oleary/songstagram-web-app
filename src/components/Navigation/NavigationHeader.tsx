@@ -5,7 +5,7 @@ import { ClassNames } from "@44north/classnames";
 
 import { Avatar } from "components";
 import { useUser } from "context";
-import { songstagramApi } from "lib";
+import { logout } from "lib";
 
 interface INavigationHeaderProps {
     /**
@@ -20,16 +20,13 @@ const NavigationHeader: FC<INavigationHeaderProps> = ({ className = "" }) => {
     const wrapperClasses = new ClassNames("dark:text-white").add(className);
     const linkClasses = new ClassNames("transition duration-250 hover:text-primary-3");
 
-    const logout = async () => {
-        await songstagramApi("/logout", "POST").catch((error) => {
-            //TODO: Error reporting
-            console.error(error);
+    const handleLogout = async () => {
+        return logout().then(() => {
+            setAccessToken(null);
+            setUser(null);
+
+            router.replace("/login");
         });
-
-        setAccessToken(null);
-        setUser(null);
-
-        router.replace("/login");
     };
 
     return (
@@ -45,7 +42,7 @@ const NavigationHeader: FC<INavigationHeaderProps> = ({ className = "" }) => {
                             <Link href="/settings">
                                 <a className={linkClasses.list()}>Edit Profile</a>
                             </Link>
-                            <button className={linkClasses.list()} onClick={logout}>
+                            <button className={linkClasses.list()} onClick={handleLogout}>
                                 Logout
                             </button>
                         </div>

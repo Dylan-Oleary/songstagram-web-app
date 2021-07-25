@@ -101,7 +101,7 @@ export interface IFormContext<ExpectedFormData> {
     /**
      * Function to execute on form submission
      */
-    onSubmit: (event: FormEvent | MouseEvent, submit: () => Promise<void>) => void;
+    onSubmit: (event: FormEvent | MouseEvent, submit: (() => Promise<void>) | (() => void)) => void;
     /**
      * Set whether or not the form is currently being submitted
      */
@@ -159,10 +159,10 @@ const FormProvider: FC<IFormProviderProps> = ({
      * @param event The form submission event
      * @param submit The callback to execute upon successful form validation
      */
-    const onSubmit: (event: FormEvent | MouseEvent, submit: () => Promise<void>) => void = (
-        event,
-        submit
-    ) => {
+    const onSubmit: (
+        event: FormEvent | MouseEvent,
+        submit: (() => Promise<void>) | (() => void)
+    ) => void = (event, submit) => {
         if (event) {
             event.preventDefault();
             event.stopPropagation();
