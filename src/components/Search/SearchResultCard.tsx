@@ -2,9 +2,10 @@ import { FC } from "react";
 import Image from "next/image";
 import prettyMS from "pretty-ms";
 import { ClassNames } from "@44north/classnames";
+import { PencilAltIcon } from "@heroicons/react/outline";
 
-import { Avatar } from "components";
-import { useExplore } from "context";
+import { Avatar, Button, CreatePostForm } from "components";
+import { useExplore, useFlyout } from "context";
 
 interface ISearchResultCardProps {
     /**
@@ -32,11 +33,13 @@ const SearchResultCard: FC<ISearchResultCardProps> = ({
     type = "track"
 }) => {
     const { pushToHistory } = useExplore();
+    const { openFlyout } = useFlyout();
     const wrapperClasses = new ClassNames(
         "inline-block space-y-4 rounded-md dark:bg-gray-2 p-4 transition-colors duration-250 dark:hover:bg-gray-3 hover:bg-gray-6 cursor-pointer shadow-lg bg-white"
     )
         .add(className)
-        .add(type === "track" ? "col-span-full" : "");
+        .add(type === "track" ? "col-span-full" : "")
+        .add(type === "album" ? "relative group" : "");
     const primaryTitleClasses = new ClassNames("text-2xl font-bold truncate");
     const secondaryTitleClasses = new ClassNames("text-sm text-gray-2 dark:text-gray-5");
     let content: JSX.Element;
@@ -70,11 +73,35 @@ const SearchResultCard: FC<ISearchResultCardProps> = ({
                             src={(data as IAlbum)?.images[0]?.url}
                         />
                     </div>
-                    <div>
+                    <div className="relative">
                         <div className={primaryTitleClasses.list()}>{data?.name}</div>
                         <div className={secondaryTitleClasses.list()}>
                             {artist?.name || (data as IAlbum)?.artists[0]?.name}
                         </div>
+                        <Button
+                            borderRadius="circle"
+                            className="absolute top-0 right-0 text-transparent transition ease-in-out bg-transparent border-transparent pointer-events-none hover:shadow-lg duration-250 focus:outline-none group-hover:bg-success-3 group-hover:border-success-3 group-hover:text-white group-hover:pointer-events-auto"
+                            onClick={() =>
+                                openFlyout(
+                                    <CreatePostForm
+                                        artistName={
+                                            artist?.name || (data as IAlbum)?.artists[0]?.name
+                                        }
+                                        imgSrc={(data as IAlbum)?.images[0]?.url}
+                                        recordName={data?.name}
+                                        spotifyRecordData={{
+                                            id: data?.id,
+                                            recordType: "album"
+                                        }}
+                                    />
+                                )
+                            }
+                            tabIndex={-1}
+                            size="sm"
+                            style="none"
+                        >
+                            <PencilAltIcon className="w-5 h-5" />
+                        </Button>
                     </div>
                 </>
             );
@@ -82,7 +109,7 @@ const SearchResultCard: FC<ISearchResultCardProps> = ({
         case "track":
             content = (
                 <>
-                    <div className="flex items-stretch space-x-2">
+                    <div className="flex items-stretch space-x-2 group">
                         <div className="relative w-16 h-16 sm:h-20 sm:w-20">
                             {(data as ITrack).album?.images[0]?.url && (
                                 <Image
@@ -102,6 +129,32 @@ const SearchResultCard: FC<ISearchResultCardProps> = ({
                                     Explicit
                                 </div>
                             )}
+                        </div>
+                        <div className="flex items-center">
+                            <Button
+                                borderRadius="circle"
+                                className="text-transparent transition ease-in-out bg-transparent border-transparent pointer-events-none hover:shadow-lg duration-250 focus:outline-none group-hover:bg-success-3 group-hover:border-success-3 group-hover:text-white group-hover:pointer-events-auto"
+                                onClick={() =>
+                                    openFlyout(
+                                        <CreatePostForm
+                                            artistName={
+                                                artist?.name || (data as IAlbum)?.artists[0]?.name
+                                            }
+                                            imgSrc={(data as ITrack)?.album?.images[0]?.url}
+                                            recordName={data?.name}
+                                            spotifyRecordData={{
+                                                id: data?.id,
+                                                recordType: "track"
+                                            }}
+                                        />
+                                    )
+                                }
+                                tabIndex={-1}
+                                size="sm"
+                                style="none"
+                            >
+                                <PencilAltIcon className="w-5 h-5" />
+                            </Button>
                         </div>
                         <div className="flex items-center font-bold">
                             {prettyMS((data as ITrack).duration_ms, {
