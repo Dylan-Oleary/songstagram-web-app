@@ -131,7 +131,10 @@ const AlbumBlock: FC<IAlbumBlockProps> = ({ id }) => {
                         </div>
                     </div>
                     <div className="space-y-2">
-                        <AlbumTrackList tracks={data.album?.tracks?.items || []} />
+                        <AlbumTrackList
+                            albumArtImgSrc={data?.album.images[0]?.url}
+                            tracks={data.album?.tracks?.items || []}
+                        />
                         {data?.album?.copyrights.length > 0 && (
                             <div className="text-xs dark:text-gray-6 text-gray-3">
                                 <span className="mr-1">&#169;</span>
