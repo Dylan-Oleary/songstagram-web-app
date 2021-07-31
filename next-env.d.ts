@@ -8,12 +8,16 @@ declare module "http" {
         cookies?: {
             session: string;
             "session.sig": string;
-        }
+        };
     }
 }
 declare type GetLayout = (page: any) => JSX.Element;
 declare type ExtendedNextPage<P = {}> = NextPage<P> & { getLayout: GetLayout };
-declare type ExtendedNextComponent<N = NextPageContext, T = any, P = {}> = NextComponentType<N, T, P> & { getLayout: GetLayout };
+declare type ExtendedNextComponent<N = NextPageContext, T = any, P = {}> = NextComponentType<
+    N,
+    T,
+    P
+> & { getLayout: GetLayout };
 declare type RestMethod = "GET" | "POST" | "PUT" | "DELETE";
 declare interface ILooseObject {
     [key: string]: any;
@@ -23,15 +27,13 @@ declare type ServerError = {
     status: number | null;
     message: string | null;
     details: string[];
-}
+};
 declare interface IBaseUser {
     userNo: number;
     email: string;
     username: string;
     profilePicture?: string;
-    preferences?: {
-        prefersDarkMode?: boolean;
-    }
+    preferences?: IUserPreferences;
 }
 declare interface IGraphQlError {
     extensions?: {
@@ -92,7 +94,7 @@ declare type SpotifySearchResults = {
     artists: IArtist[];
     tracks: ITrack[];
     total: number;
-}
+};
 declare interface ISearchResults {
     spotifySearch: SpotifySearchResults;
 }
@@ -114,14 +116,14 @@ declare interface IArtistBlockQueryResult {
         uri: string;
         albums: {
             items: IAlbum[];
-        }
+        };
         external_urls: {
             spotify: string;
-        }
+        };
         followers: {
             total: number;
-        }
-    }
+        };
+    };
 }
 
 declare interface IFilteredMusicalReleases {
@@ -130,7 +132,55 @@ declare interface IFilteredMusicalReleases {
     singles: IAlbum[];
 }
 
+declare interface IUserProfilePageQueryResult {
+    user: {
+        userNo: number;
+        username: string;
+        email: string;
+        firstName: string;
+        lastName: string;
+        postCount: number;
+        followerCount: number;
+        followingCount: number;
+        bio?: string;
+        profilePicture?: string;
+        preferences?: IUserPreferences;
+    };
+}
+
+declare interface IUserPreferences {
+    prefersDarkMode?: boolean;
+}
+
+declare interface IPostRecord {
+    postNo: number;
+    userNo: number;
+    spotifyId: string;
+    spotifyRecordType: "album" | "track";
+    body: string;
+    artist: IArtist[];
+    album: IAlbum;
+    tracks: ITrack[];
+    isEdited: boolean;
+}
+
+declare interface IPostListQueryResult {
+    posts: {
+        pagination: INativePagination;
+        posts: IPostRecord[];
+    };
+}
+
+declare interface INativePagination {
+    currentPage: number;
+    itemsPerPage: number;
+    nextPage: number;
+    prevPage: number;
+    totalPages: number;
+    totalRecords: number;
+}
+
 declare type SelectInputOption = {
     label: string;
     value: string;
-}
+};

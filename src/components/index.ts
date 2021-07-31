@@ -6,4 +6,5 @@ export * from "./Button";
 export * from "./Explore";
 export * from "./Forms";
 export * from "./Navigation";
+export * from "./Posts";
 export * from "./Search";
