@@ -154,16 +154,17 @@ declare interface IUserPreferences {
 
 declare interface IPostRecord {
     postNo: number;
-    userNo: number;
+    user: IBaseUser;
     spotifyId: string;
     spotifyRecordType: "album" | "track";
     body: string;
-    artist: IArtist[];
+    artists: IArtist[];
     album: IAlbum;
     tracks: ITrack[];
     isEdited: boolean;
     commentCount: number;
     likeCount: number;
+    createdDate: Date;
 }
 
 declare interface IPostListQueryResult {

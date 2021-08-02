@@ -2,8 +2,8 @@ import { FC } from "react";
 import { ClassNames } from "@44north/classnames";
 import { gql, useQuery } from "@apollo/client";
 
-import { Alert, Post } from "components";
-import { useUser } from "context";
+import { Alert, Post, PostSlider } from "components";
+import { useModal, useUser } from "context";
 
 interface IUserPostListProps {
     /**
@@ -18,6 +18,7 @@ interface IUserPostListProps {
 
 const UserPostList: FC<IUserPostListProps> = ({ className = "", userNo }) => {
     const wrapperClasses = new ClassNames("w-full").add(className);
+    const { openModal } = useModal();
     const { accessToken } = useUser();
 
     const { data, error, loading } = useQuery<IPostListQueryResult>(GET_USER_POSTS, {
@@ -39,7 +40,17 @@ const UserPostList: FC<IUserPostListProps> = ({ className = "", userNo }) => {
             {!loading && data?.posts?.posts?.length > 0 && (
                 <div className="grid grid-cols-3 gap-2 justify-items-stretch">
                     {data.posts.posts.map((post) => (
-                        <Post key={post.postNo} className="col-span-1" post={post} />
+                        <Post
+                            key={post.postNo}
+                            className="col-span-1"
+                            onClick={() =>
+                                openModal({
+                                    className: "h-[90vh]",
+                                    content: <PostSlider initialPostNo={post.postNo} />
+                                })
+                            }
+                            post={post}
+                        />
                     ))}
                 </div>
             )}

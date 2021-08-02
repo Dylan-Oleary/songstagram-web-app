@@ -3,10 +3,10 @@ import { ClassNames } from "@44north/classnames";
 import { gql, useQuery } from "@apollo/client";
 import { PencilAltIcon } from "@heroicons/react/outline";
 import dayjs from "dayjs";
-import prettyMS from "pretty-ms";
 
 import { AlbumTrackList, Avatar, Button, CreatePostForm } from "components";
 import { useExplore, useFlyout, useUser } from "context";
+import { formatArtistLabel, getAlbumLength } from "lib";
 
 interface IAlbumBlockProps {
     /**
@@ -24,35 +24,6 @@ const AlbumBlock: FC<IAlbumBlockProps> = ({ id }) => {
         context: { headers: { authorization: accessToken } },
         variables: { id }
     });
-
-    /**
-     * Formats and returns a list of artists that created the album
-     *
-     * @param artists An array of artists
-     * @returns A list of artists
-     */
-    const formatArtistLabel: (artists: IArtist[]) => string = (artists = []) => {
-        if (artists.length === 0) return "";
-        if (artists.length > 1) return "Various Artists";
-
-        return artists[0]?.name || "";
-    };
-
-    /**
-     * Returns a readable album length derived from each track's duration
-     *
-     * @param tracks The album's tracks
-     * @returns A readable album length
-     */
-    const getAlbumLength: (tracks: ITrack[]) => any = (tracks = []) => {
-        if (tracks.length === 0) return "";
-
-        const albumLengthInMs = tracks.reduce((accumulator, currentTrack) => {
-            return accumulator + currentTrack.duration_ms;
-        }, 0);
-
-        return prettyMS(albumLengthInMs, { secondsDecimalDigits: 0, verbose: true });
-    };
 
     /**
      * Navigates to the artist page and pushes the component to history

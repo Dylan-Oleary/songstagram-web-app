@@ -3,7 +3,7 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import Cookies from "cookies";
 
 import "styles/globals.css";
-import { FlyoutProvider, UserProvider } from "context";
+import { FlyoutProvider, ModalProvider, UserProvider } from "context";
 import { ApplicationLayout } from "layouts";
 import { gqlErrorHandler, songstagramApi } from "lib";
 import Error from "pages/_error";
@@ -39,11 +39,13 @@ function Application({ Component, pageProps, serverProps }: ExtendedAppProps) {
                 initialValues={{ accessToken: serverProps?.accessToken, user: serverProps?.user }}
             >
                 <FlyoutProvider>
-                    {serverProps?.errorStatus ? (
-                        <Error statusCode={serverProps.errorStatus} />
-                    ) : (
-                        getLayout(<Component {...pageProps} />)
-                    )}
+                    <ModalProvider>
+                        {serverProps?.errorStatus ? (
+                            <Error statusCode={serverProps.errorStatus} />
+                        ) : (
+                            getLayout(<Component {...pageProps} />)
+                        )}
+                    </ModalProvider>
                 </FlyoutProvider>
             </UserProvider>
         </ApolloProvider>
