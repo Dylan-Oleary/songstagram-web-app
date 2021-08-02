@@ -72,6 +72,8 @@ const GET_USER_POSTS = gql`
                     id
                     name
                 }
+                commentCount
+                likeCount
             }
             pagination {
                 currentPage

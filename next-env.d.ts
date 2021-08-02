@@ -162,6 +162,8 @@ declare interface IPostRecord {
     album: IAlbum;
     tracks: ITrack[];
     isEdited: boolean;
+    commentCount: number;
+    likeCount: number;
 }
 
 declare interface IPostListQueryResult {
