@@ -2,7 +2,7 @@ import { FC } from "react";
 import { ClassNames } from "@44north/classnames";
 import { gql, useQuery } from "@apollo/client";
 
-import { Alert, Post, PostSlider } from "components";
+import { Alert, Post, PostCarousel } from "components";
 import { useModal, useUser } from "context";
 
 interface IUserPostListProps {
@@ -46,7 +46,7 @@ const UserPostList: FC<IUserPostListProps> = ({ className = "", userNo }) => {
                             onClick={() =>
                                 openModal({
                                     className: "h-[90vh]",
-                                    content: <PostSlider initialPostNo={post.postNo} />
+                                    content: <PostCarousel initialPostNo={post.postNo} />
                                 })
                             }
                             post={post}

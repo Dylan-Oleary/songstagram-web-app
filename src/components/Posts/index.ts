@@ -1,3 +1,3 @@
 export * from "./Post";
-export * from "./PostSlider";
+export * from "./PostCarousel";
 export * from "./UserPostList";

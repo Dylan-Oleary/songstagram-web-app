@@ -66,7 +66,7 @@ const ModalProvider: FC<{}> = ({ children }) => {
     });
     const refDiv = useRef<HTMLDivElement>(null);
     const modalWrapperClasses = new ClassNames(
-        "inline-block w-8/12 overflow-hidden text-left transition-all transform bg-white shadow-xl dark:bg-dark"
+        "inline-block w-8/12 text-left transition-all transform bg-white shadow-xl dark:bg-dark"
     ).add(currentModal.className);
 
     const closeModal: (callback?: Function) => void = (callback = () => {}) => {

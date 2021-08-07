@@ -3,16 +3,16 @@ import { ClassNames } from "@44north/classnames";
 import { gql, useLazyQuery } from "@apollo/client";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { ChatIcon, HeartIcon } from "@heroicons/react/outline";
+import { ChatIcon, ChevronLeftIcon, ChevronRightIcon, HeartIcon } from "@heroicons/react/outline";
 import { HeartIcon as SolidHeartIcon } from "@heroicons/react/solid";
 
-import { Avatar } from "components";
+import { Avatar, Button } from "components";
 import { useUser } from "context";
 import { formatArtistLabel, getAlbumLength } from "lib";
 
 dayjs.extend(relativeTime);
 
-interface IPostSliderProps {
+interface IPostCarouselProps {
     /**
      * Classes to be applied to the wrapper element
      */
@@ -23,10 +23,10 @@ interface IPostSliderProps {
     initialPostNo: number;
 }
 
-const PostSlider: FC<IPostSliderProps> = ({ className = "", initialPostNo }) => {
-    const wrapperClasses = new ClassNames("flex flex-col w-full dark:text-white h-full").add(
-        className
-    );
+const PostCarousel: FC<IPostCarouselProps> = ({ className = "", initialPostNo }) => {
+    const wrapperClasses = new ClassNames(
+        "flex flex-col w-full dark:text-white h-full relative"
+    ).add(className);
     const { accessToken } = useUser();
 
     const [fetchPost, { data, error, loading }] = useLazyQuery<{ post: IPostRecord }>(GET_POST);
@@ -40,6 +40,43 @@ const PostSlider: FC<IPostSliderProps> = ({ className = "", initialPostNo }) => 
 
     return (
         <div className={wrapperClasses.list()}>
+            {/* Carousel Controls */}
+            <Button
+                borderRadius="circle"
+                className="absolute text-white transition ease-in-out transform shadow-lg hover:scale-125 hover:shadow-xl -left-16 top-1/2 duration-250 border-success-3 bg-success-3 disabled:cursor-not-allowed disabled:opacity-40"
+                disabled={data?.post?.prevUserPostNo ? false : true}
+                onClick={() => {
+                    if (data?.post?.prevUserPostNo) {
+                        fetchPost({
+                            context: { headers: { authorization: accessToken } },
+                            variables: { pk: data.post.prevUserPostNo }
+                        });
+                    }
+                }}
+                size="sm"
+                style="none"
+            >
+                <ChevronLeftIcon className="w-7 h-7" />
+            </Button>
+            <Button
+                borderRadius="circle"
+                className="absolute text-white transition ease-in-out transform shadow-lg hover:scale-125 hover:shadow-xl -right-16 top-1/2 duration-250 border-success-3 bg-success-3 disabled:cursor-not-allowed disabled:opacity-40"
+                disabled={data?.post?.nextUserPostNo ? false : true}
+                onClick={() => {
+                    if (data?.post?.nextUserPostNo) {
+                        fetchPost({
+                            context: { headers: { authorization: accessToken } },
+                            variables: { pk: data.post.nextUserPostNo }
+                        });
+                    }
+                }}
+                size="sm"
+                style="none"
+            >
+                <ChevronRightIcon className="w-7 h-7" />
+            </Button>
+
+            {/* Post Content */}
             {!loading && data?.post && (
                 <>
                     <div className="grid w-full h-full grid-cols-6">
@@ -159,9 +196,11 @@ const GET_POST = gql`
             }
             commentCount
             likeCount
+            nextUserPostNo
+            prevUserPostNo
         }
     }
 `;
 
-export default PostSlider;
-export { PostSlider };
+export default PostCarousel;
+export { PostCarousel };

@@ -164,6 +164,8 @@ declare interface IPostRecord {
     isEdited: boolean;
     commentCount: number;
     likeCount: number;
+    nextUserPostNo?: number;
+    prevUserPostNo?: number;
     createdDate: Date;
 }
 
