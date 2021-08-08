@@ -6,7 +6,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { ChatIcon, ChevronLeftIcon, ChevronRightIcon, HeartIcon } from "@heroicons/react/outline";
 import { HeartIcon as SolidHeartIcon } from "@heroicons/react/solid";
 
-import { Avatar, Button } from "components";
+import { Avatar, Button, CommentForm } from "components";
 import { useUser } from "context";
 import { formatArtistLabel, getAlbumLength } from "lib";
 
@@ -155,7 +155,10 @@ const PostCarousel: FC<IPostCarouselProps> = ({ className = "", initialPostNo })
                         </div>
 
                         {/* Post Content */}
-                        <div className="col-span-4 px-8 py-4 space-y-6 overflow-hidden bg-gray-100 dark:bg-black"></div>
+                        <div className="flex flex-col col-span-4 px-4 py-4 space-y-6 overflow-hidden bg-gray-100 dark:bg-black">
+                            <div className="flex-grow">Comments - Flex Grow</div>
+                            <CommentForm postNo={data?.post?.postNo} />
+                        </div>
                     </div>
                 </>
             )}

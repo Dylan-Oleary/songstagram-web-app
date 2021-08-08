@@ -18,7 +18,7 @@ export interface IFormComponentProps {
 }
 
 export interface IFormData {
-    [key: string]: Primitive;
+    [key: string]: Primitive | Object;
 }
 
 export type FormErrors<ExpectedFormData> = {
@@ -31,7 +31,7 @@ export type FormInputControl<ExpectedFormData = IFormData> = {
         isRequired?: boolean;
         label: string;
         name: string;
-        validators?: Array<(value: Primitive) => Error | void>;
+        validators?: Array<(value: Primitive | Object) => Error | void>;
     };
 };
 
@@ -97,7 +97,7 @@ export interface IFormContext<ExpectedFormData> {
     /**
      * Function to execute on change of an input
      */
-    onChange: (field: string, value: Primitive) => void;
+    onChange: (field: string, value: Primitive | Object) => void;
     /**
      * Function to execute on form submission
      */
