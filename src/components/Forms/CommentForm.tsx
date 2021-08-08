@@ -58,7 +58,7 @@ const Form: FC<ICommentFormProps> = ({ className = "", parentCommentNo, postNo }
             onSubmit={handleSubmit}
         >
             <WYSIWYG
-                className="w-full bg-white h-[200px] flex flex-col rounded-sm border-gray-2 border overflow-hidden"
+                className="w-full h-[200px] flex flex-col rounded-sm border-gray-2 border overflow-hidden"
                 decorationConfig={{
                     className: "flex-grow bg-gray-2",
                     decoratorActionsContent: (
@@ -79,7 +79,7 @@ const Form: FC<ICommentFormProps> = ({ className = "", parentCommentNo, postNo }
                     withStrikethrough: true,
                     withUnderline: true
                 }}
-                editorClassName="w-full focus:outline-none bg-white p-2 h-[160px] overflow-hidden"
+                editorClassName="w-full focus:outline-none dark:bg-dark bg-white p-2 h-[160px] overflow-hidden dark:text-white"
                 onChange={(value) => onChange(inputControl.body.name, value)}
                 placeholder="What are your thoughts?"
             />

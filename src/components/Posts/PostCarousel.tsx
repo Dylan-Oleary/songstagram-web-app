@@ -1,4 +1,5 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
+import { Transition } from "@headlessui/react";
 import { ClassNames } from "@44north/classnames";
 import { gql, useLazyQuery } from "@apollo/client";
 import dayjs from "dayjs";
@@ -28,6 +29,7 @@ const PostCarousel: FC<IPostCarouselProps> = ({ className = "", initialPostNo })
         "flex flex-col w-full dark:text-white h-full relative"
     ).add(className);
     const { accessToken } = useUser();
+    const [showCommentForm, setShowCommentForm] = useState<boolean>(false);
 
     const [fetchPost, { data, error, loading }] = useLazyQuery<{ post: IPostRecord }>(GET_POST);
 
@@ -148,7 +150,12 @@ const PostCarousel: FC<IPostCarouselProps> = ({ className = "", initialPostNo })
                                     </span>
                                     <div className="flex space-x-4">
                                         <HeartIcon className="w-8 h-8" />
-                                        <ChatIcon className="w-8 h-8" />
+                                        <button
+                                            onClick={() => setShowCommentForm(!showCommentForm)}
+                                            type="button"
+                                        >
+                                            <ChatIcon className="w-8 h-8" />
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -157,7 +164,18 @@ const PostCarousel: FC<IPostCarouselProps> = ({ className = "", initialPostNo })
                         {/* Post Content */}
                         <div className="flex flex-col col-span-4 px-4 py-4 space-y-6 overflow-hidden bg-gray-100 dark:bg-black">
                             <div className="flex-grow">Comments - Flex Grow</div>
-                            <CommentForm postNo={data?.post?.postNo} />
+                            <Transition
+                                appear
+                                show={showCommentForm}
+                                enter="transition ease duration-500 transform"
+                                enterFrom="translate-y-72"
+                                enterTo="translate-y-0"
+                                leave="transition ease duration-500 transform"
+                                leaveFrom="translate-y-0"
+                                leaveTo="translate-y-72"
+                            >
+                                <CommentForm postNo={data?.post?.postNo} />
+                            </Transition>
                         </div>
                     </div>
                 </>
