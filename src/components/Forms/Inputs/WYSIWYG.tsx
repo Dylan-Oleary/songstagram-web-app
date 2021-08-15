@@ -1,4 +1,4 @@
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, useEffect } from "react";
 import { ClassNames } from "@44north/classnames";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -68,7 +68,7 @@ interface IWYSIWYGProps {
     /**
      * Callback to execute on submission
      */
-    onChange: (value: Object) => void;
+    onChange: (value: string) => void;
     /**
      * Placeholder to display in the wysiwig
      */
@@ -99,14 +99,22 @@ const WYSIWYG: FC<IWYSIWYGProps> = ({
                 class: editorClassName
             }
         },
+        enableInputRules: false,
+        enablePasteRules: false,
         extensions: [
             StarterKit,
             CharacterCount.configure({ limit: characterLimit }),
             Placeholder.configure({ placeholder }),
             Underline
         ],
-        onUpdate: ({ editor }) => onChange(editor.getJSON())
+        onUpdate: ({ editor }) => onChange(editor.getHTML())
     });
+
+    useEffect(() => {
+        return () => {
+            if (editor) editor.destroy();
+        };
+    }, []);
 
     return (
         <div className={className}>
